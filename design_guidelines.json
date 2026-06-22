@@ -1,0 +1,174 @@
+{
+  "project_name": "Mikon OSS",
+  "version": "1.0.0",
+  "design_philosophy": {
+    "identity": "The Anti-AI Designer (E1)",
+    "core_concept": "Analytical Humanism",
+    "vibe": "Precision, Depth, Insight, Scalability",
+    "archetype": "Swiss & High-Contrast (Data Variant)",
+    "mode": "dark",
+    "emotional_goal": "Confidence in data, clarity in chaos."
+  },
+  "typography": {
+    "font_family": {
+      "headings": "Poppins, sans-serif",
+      "body": "Inter, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "h1": "text-4xl md:text-5xl font-bold tracking-tight",
+      "h2": "text-3xl md:text-4xl font-semibold tracking-tight",
+      "h3": "text-2xl font-semibold tracking-normal",
+      "h4": "text-xl font-medium",
+      "body": "text-sm leading-relaxed",
+      "small": "text-xs font-medium uppercase tracking-wider opacity-70"
+    },
+    "usage_rules": [
+      "Use Poppins ONLY for Headings (h1-h4) and major stats.",
+      "Use Inter for all body text, tables, inputs, and long-form content.",
+      "Use JetBrains Mono for code snippets, API keys, or raw data values."
+    ]
+  },
+  "colors": {
+    "palette": {
+      "primary": "#5A9BD5",
+      "primary_foreground": "#FFFFFF",
+      "secondary": "#EA711B",
+      "secondary_foreground": "#FFFFFF",
+      "accent": "#0047AB",
+      "accent_foreground": "#FFFFFF",
+      "background": "#020408",
+      "foreground": "#F8FAFC",
+      "card": "#0B1221",
+      "card_foreground": "#F8FAFC",
+      "muted": "#1E293B",
+      "muted_foreground": "#94A3B8",
+      "border": "#1E293B",
+      "input": "#1E293B",
+      "destructive": "#EF4444"
+    },
+    "gradients": {
+      "brand_glow": "linear-gradient(135deg, rgba(90,155,213,0.15) 0%, rgba(234,113,27,0.05) 100%)",
+      "active_item": "linear-gradient(90deg, rgba(90,155,213,0.1) 0%, transparent 100%)"
+    },
+    "semantic": {
+      "success": "#10B981",
+      "warning": "#F59E0B",
+      "error": "#EF4444",
+      "info": "#3B82F6",
+      "independence_score": "#5A9BD5",
+      "efficiency_score": "#EA711B"
+    }
+  },
+  "layout": {
+    "spacing_system": "Use generous padding. p-6 or p-8 for cards. gap-6 for grids.",
+    "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+    "grid_strategy": "Bento Grid (Mode B - High Density). Use col-span-2 or col-span-full for major charts.",
+    "sidebar": {
+      "width": "w-64",
+      "behavior": "Fixed left, collapsible on mobile.",
+      "style": "Glassmorphism: bg-background/95 backdrop-blur-md border-r border-border/40"
+    },
+    "z_index": {
+      "toast": 50,
+      "modal": 40,
+      "dropdown": 30,
+      "sticky_nav": 20
+    }
+  },
+  "components": {
+    "cards": {
+      "style": "Tech Borders",
+      "classes": "bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-colors duration-300 shadow-none rounded-xl"
+    },
+    "buttons": {
+      "primary": "bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 rounded-lg px-6 py-2 font-medium transition-all active:scale-95",
+      "secondary": "bg-secondary hover:bg-secondary/90 text-white shadow-lg shadow-secondary/20 rounded-lg px-6 py-2 font-medium transition-all active:scale-95",
+      "outline": "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground rounded-lg px-6 py-2 transition-all",
+      "ghost": "hover:bg-accent hover:text-accent-foreground rounded-lg px-4 py-2"
+    },
+    "inputs": {
+      "style": "bg-background/50 border-input focus:border-primary focus:ring-1 focus:ring-primary rounded-lg h-10 transition-all"
+    },
+    "tables": {
+      "style": "Compact density. Header: uppercase text-xs text-muted-foreground. Rows: hover:bg-muted/50 transition-colors border-b border-border/50"
+    },
+    "modals": {
+      "overlay": "bg-black/80 backdrop-blur-sm",
+      "content": "bg-card border border-border shadow-2xl rounded-xl p-6 max-w-lg w-full"
+    }
+  },
+  "visual_enhancers": {
+    "glassmorphism": "backdrop-filter backdrop-blur-xl bg-background/70 border border-white/5",
+    "gradients": "Use subtle radial gradients for 'spotlight' effects behind charts.",
+    "borders": "1px solid rgba(255,255,255,0.08)",
+    "shadows": "shadow-[0_8px_30px_rgb(0,0,0,0.12)] for floating elements only."
+  },
+  "charts": {
+    "library": "recharts",
+    "theme": {
+      "background": "transparent",
+      "text_color": "#94A3B8",
+      "grid_color": "#334155",
+      "tooltip_bg": "#1E293B",
+      "tooltip_border": "#334155"
+    },
+    "palettes": {
+      "revenue": ["#5A9BD5", "#0047AB"],
+      "expenses": ["#EA711B", "#FF7043"],
+      "mixed": ["#5A9BD5", "#EA711B", "#10B981", "#8B5CF6"]
+    }
+  },
+  "assets": {
+    "icons": {
+      "library": "lucide-react",
+      "style": "stroke-width={1.5} size={20}",
+      "mapping": {
+        "dashboard": "LayoutDashboard",
+        "projects": "Briefcase",
+        "expenses": "CreditCard",
+        "services": "Package",
+        "simulator": "Calculator",
+        "profile": "User",
+        "settings": "Settings",
+        "logout": "LogOut",
+        "alert": "AlertTriangle",
+        "trend_up": "TrendingUp",
+        "trend_down": "TrendingDown"
+      }
+    },
+    "images": {
+      "login_bg": {
+        "url": "https://images.unsplash.com/photo-1765238343742-de7cecb174c9",
+        "alt": "Abstract Blue Orange Data Streams",
+        "usage": "Login page background with overlay"
+      },
+      "user_avatar": {
+        "url": "https://images.unsplash.com/photo-1758518729314-b02874db8c37",
+        "alt": "User Profile",
+        "usage": "Profile page and Dashboard header"
+      },
+      "logo_placeholder": {
+        "concept": "Hexagon with BrainCircuit or Sparkles inside",
+        "color": "#5A9BD5"
+      }
+    }
+  },
+  "universal_guidelines": [
+    "Always check contrast ratios. The Navy Blue background requires pure white or very light grey text.",
+    "Do not use generic 'card' layouts. Use the 'Tech Borders' style defined in components.",
+    "Use data-testid attributes for all interactive elements.",
+    "Animations must be purposeful (e.g., charts growing, numbers counting up). Avoid random motion.",
+    "Forms should use 'react-hook-form' with 'zod' validation.",
+    "Toast notifications (Sonner) must be used for all CRUD success/error states.",
+    "Dark mode is mandatory for this app. Do not implement a light mode toggle unless explicitly asked."
+  ],
+  "instructions_to_main_agent": {
+    "step_1": "Setup the Theme Provider (if not present) to force dark mode or handle system preference.",
+    "step_2": "Update tailwind.config.js with the custom colors defined in 'colors' section.",
+    "step_3": "Create a 'Layout' component that includes the Sidebar and Topbar.",
+    "step_4": "Implement the Dashboard page using the Bento Grid strategy.",
+    "step_5": "Build the Reusable Components (StatCard, DataTable, ModalForm).",
+    "step_6": "Implement the specialized hooks (useIndependenceScore, etc.) in a /hooks directory."
+  }
+}

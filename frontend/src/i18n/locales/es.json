@@ -1,0 +1,37 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "pipeline": "Pipeline",
+    "projects": "Proyectos",
+    "expenses": "Gastos",
+    "services": "Servicios",
+    "simulator": "Simulador ROI",
+    "saasCalculator": "Calculadora SaaS",
+    "ghostwriter": "Ghostwriter",
+    "auditLog": "Audit Log",
+    "collapse": "Colapsar"
+  },
+  "header": {
+    "profile": "Perfil",
+    "logout": "Cerrar Sesión"
+  },
+  "auth": {
+    "tagline": "Anticipación Estratégica",
+    "loginTitle": "Acceso al Sistema",
+    "signupTitle": "Crear Cuenta",
+    "loginSubtitle": "Introduce tus credenciales de consultor",
+    "signupSubtitle": "Regístrate en el ecosistema Mikon OSS",
+    "fullName": "Nombre completo",
+    "email": "Email corporativo",
+    "password": "Contraseña",
+    "verifying": "Verificando...",
+    "enter": "Entrar al Sistema",
+    "signup": "Registrarse",
+    "switchToSignup": "¿No tienes cuenta? Solicitar acceso",
+    "switchToLogin": "¿Ya tienes cuenta? Iniciar sesión",
+    "footer": "Mikon Insights · La brújula del éxito"
+  },
+  "common": {
+    "loading": "Iniciando sistemas..."
+  }
+}

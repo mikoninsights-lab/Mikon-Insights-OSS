@@ -1,0 +1,108 @@
+{
+  "timestamp": "2026-03-23T21:16:18.803343",
+  "summary": {
+    "total_tests": 16,
+    "passed": 16,
+    "failed": 0,
+    "success_rate": 100.0
+  },
+  "failed_tests": [],
+  "all_results": [
+    {
+      "name": "API Root Health Check",
+      "success": true,
+      "details": "",
+      "timestamp": "2026-03-23T21:16:17.169458"
+    },
+    {
+      "name": "Health Check Endpoint",
+      "success": true,
+      "details": "",
+      "timestamp": "2026-03-23T21:16:17.332030"
+    },
+    {
+      "name": "Login with Valid Credentials",
+      "success": true,
+      "details": "",
+      "timestamp": "2026-03-23T21:16:17.561435"
+    },
+    {
+      "name": "Login with Invalid Credentials",
+      "success": true,
+      "details": "",
+      "timestamp": "2026-03-23T21:16:17.694580"
+    },
+    {
+      "name": "Get Current User Profile",
+      "success": true,
+      "details": "",
+      "timestamp": "2026-03-23T21:16:17.819701"
+    },
+    {
+      "name": "Dashboard Analytics Data",
+      "success": true,
+      "details": "",
+      "timestamp": "2026-03-23T21:16:17.942283"
+    },
+    {
+      "name": "Dashboard Data Structure",
+      "success": true,
+      "details": "",
+      "timestamp": "2026-03-23T21:16:17.942915"
+    },
+    {
+      "name": "KPIs Data Structure",
+      "success": true,
+      "details": "",
+      "timestamp": "2026-03-23T21:16:17.942927"
+    },
+    {
+      "name": "ROI Simulator Calculation",
+      "success": true,
+      "details": "",
+      "timestamp": "2026-03-23T21:16:18.056343"
+    },
+    {
+      "name": "ROI Simulator Response Structure",
+      "success": true,
+      "details": "",
+      "timestamp": "2026-03-23T21:16:18.056937"
+    },
+    {
+      "name": "Get All Projects",
+      "success": true,
+      "details": "",
+      "timestamp": "2026-03-23T21:16:18.159012"
+    },
+    {
+      "name": "Create New Project",
+      "success": true,
+      "details": "",
+      "timestamp": "2026-03-23T21:16:18.282755"
+    },
+    {
+      "name": "Get Single Project",
+      "success": true,
+      "details": "",
+      "timestamp": "2026-03-23T21:16:18.407927"
+    },
+    {
+      "name": "Update Project",
+      "success": true,
+      "details": "",
+      "timestamp": "2026-03-23T21:16:18.576964"
+    },
+    {
+      "name": "Get All Expenses",
+      "success": true,
+      "details": "",
+      "timestamp": "2026-03-23T21:16:18.685497"
+    },
+    {
+      "name": "Get All Services",
+      "success": true,
+      "details": "",
+      "timestamp": "2026-03-23T21:16:18.802668"
+    }
+  ]
+}
