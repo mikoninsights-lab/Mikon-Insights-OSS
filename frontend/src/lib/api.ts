@@ -66,7 +66,7 @@ export async function register(username: string, email: string, password: string
 export const getMe = () => request<BackendUser>('/api/auth/me');
 
 // ---- Projects ----
-export interface PaginatedResponse<T> {
+export interface PaginatedResponse {
   pagination: { page: number; limit: number; total: number; pages: number };
   [key: string]: any;
 }

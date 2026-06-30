@@ -3,7 +3,6 @@ import { Clock, MoreHorizontal, Filter, Plus, Target, ChevronRight } from "lucid
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 
 type Stage = "new" | "nurturing" | "contacted" | "proposal" | "negotiation" | "won" | "lost";
 type Temp = "hot" | "warm" | "cold";

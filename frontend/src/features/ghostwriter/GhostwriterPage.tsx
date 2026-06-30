@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Upload, Mic, FileText, ChevronDown, Sparkles, History, Send, BrainCircuit, Type, MessageSquareCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const topicAngles = ["Marketing Analytics", "People Analytics", "IA Aplicada", "Estrategia de Datos", "Caso de Éxito", "Liderazgo Técnico"];
 const audiences = ["CMO / Director Marketing", "HR Director", "Founder / CEO", "Data Team Lead", "Inversores"];
