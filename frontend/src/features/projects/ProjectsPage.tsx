@@ -177,7 +177,7 @@ export default function ProjectsPage() {
             <Briefcase className="w-8 h-8 text-primary" />
             Proyectos
           </h1>
-          <p className="text-muted-foreground text-sm">Gestiona la cartera de operaciones estratégicas de Mikon</p>
+          <p className="text-muted-foreground text-sm">Gestiona la cartera de operaciones estratégicas de Mikon Insights</p>
         </div>
         <div className="flex items-center gap-4">
           {projects.length > 0 && (

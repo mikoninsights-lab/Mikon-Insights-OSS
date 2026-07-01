@@ -15,7 +15,7 @@
 
 Así como Mikon Insights transforma datos complejos en **guías de anticipación** para sus clientes, Mikon Insights OSS aplica esa misma filosofía internamente: monitorizar la rentabilidad, escalabilidad y eficiencia operativa **sin depender de perfiles técnicos**.
 
-### La Filosofía Mikon
+### La Filosofía Mikon Insights
 
 | Principio | En Clientes | En Mikon Insights OSS |
 |-----------|-------------|--------------|

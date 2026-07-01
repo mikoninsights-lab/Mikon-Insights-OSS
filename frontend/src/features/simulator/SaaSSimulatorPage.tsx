@@ -152,7 +152,7 @@ export default function SaaSSimulatorPage() {
         <div className="space-y-1">
           <div className="flex items-center gap-2 mb-2">
             <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 py-1">
-              Laboratorio Mikon
+              Mikon Lab
             </Badge>
           </div>
           <h1 className="font-heading text-3xl md:text-4xl font-bold tracking-tight">
@@ -392,7 +392,7 @@ export default function SaaSSimulatorPage() {
             <div className="p-5 rounded-2xl bg-muted/20 border border-border/50">
               <h4 className="font-heading font-bold mb-2 flex items-center gap-2">
                 <ChevronRight className="w-4 h-4 text-primary" />
-                Escalabilidad Mikon
+                Escalabilidad Mikon Insights
               </h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Utiliza los módulos de automatización de Mikon Insights para mantener tu estructura de costes plana mientras el número de clientes crece, maximizando tu margen neto por cliente.
