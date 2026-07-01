@@ -1,5 +1,5 @@
 {
-  "summary": "Completed comprehensive testing of Mikon OSS Business Intelligence platform. Backend APIs working perfectly (100% success rate). Frontend functionality working well with minor chart rendering issues.",
+  "summary": "Completed comprehensive testing of Mikon Insights OSS Business Intelligence platform. Backend APIs working perfectly (100% success rate). Frontend functionality working well with minor chart rendering issues.",
   "backend_issues": {
     "critical_bugs": [],
     "flaky_endpoints": []

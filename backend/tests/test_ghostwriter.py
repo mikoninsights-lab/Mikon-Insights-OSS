@@ -1,4 +1,4 @@
-"""Backend tests for Mikon OSS Ghostwriter feature (Block 6)."""
+"""Backend tests for Mikon Insights OSS Ghostwriter feature (Block 6)."""
 import os
 import time
 import pytest

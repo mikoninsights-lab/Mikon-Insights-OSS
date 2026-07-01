@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Mikon OSS Backend API Testing Suite
+Mikon Insights OSS Backend API Testing Suite
 Tests all backend endpoints for the Business Intelligence platform
 """
 
@@ -337,7 +337,7 @@ class MikonOSSAPITester:
 
     def run_all_tests(self):
         """Run all test suites"""
-        print("🚀 Starting Mikon OSS Backend API Tests")
+        print("🚀 Starting Mikon Insights OSS Backend API Tests")
         print(f"   Base URL: {self.base_url}")
         print(f"   Test Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         

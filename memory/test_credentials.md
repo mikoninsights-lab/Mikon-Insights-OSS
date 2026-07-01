@@ -1,4 +1,4 @@
-# Mikon OSS — Test Credentials
+# Mikon Insights OSS — Test Credentials
 
 ## Admin account (seeded)
 - **Email**: `admin@mikon.com`
