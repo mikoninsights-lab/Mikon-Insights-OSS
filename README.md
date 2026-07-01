@@ -178,7 +178,7 @@ npm start       # Iniciar servidor
 # Frontend
 cd frontend
 yarn install
-yarn start      # Desarrollo
+yarn dev        # Desarrollo
 yarn build      # Producción
 ```
 
