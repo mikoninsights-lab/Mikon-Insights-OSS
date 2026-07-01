@@ -122,6 +122,29 @@
     @apply sidebar-item text-primary bg-primary/10 border-l-2 border-primary;
   }
 
+  .sidebar-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+    transition: all 0.2s;
+    color: rgba(255, 255, 255, 0.5);
+    border-left: 2px solid transparent;
+    font-size: 0.8125rem;
+  }
+
+  .sidebar-nav-item:hover {
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  .sidebar-nav-item.active {
+    color: #EA711B;
+    background: rgba(234, 113, 27, 0.13);
+    border-left-color: #EA711B;
+  }
+
   .table-header {
     @apply text-xs font-medium uppercase tracking-wider text-muted-foreground;
   }

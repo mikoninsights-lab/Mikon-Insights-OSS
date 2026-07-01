@@ -2,17 +2,16 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
-import { 
-  LayoutDashboard, 
-  Briefcase, 
-  CreditCard, 
-  Package, 
-  Calculator, 
-  User, 
+import {
+  LayoutDashboard,
+  Briefcase,
+  CreditCard,
+  Package,
+  Calculator,
+  User,
   LogOut,
   Menu,
   X,
-  Hexagon,
   ChevronRight,
   ChevronLeft,
   KanbanSquare,
@@ -83,34 +82,41 @@ function Sidebar({ isOpen, onClose, isCollapsed, onToggleCollapse }: SidebarProp
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed top-0 left-0 h-full z-50 transition-all duration-300 ease-out lg:translate-x-0 lg:static bg-background/95 backdrop-blur-xl border-r border-border/40 flex flex-col",
+          "fixed top-0 left-0 h-full z-50 transition-all duration-300 ease-out lg:translate-x-0 lg:static flex flex-col",
           isOpen ? "translate-x-0" : "-translate-x-full",
           isCollapsed ? "lg:w-16 w-64" : "lg:w-64 w-64"
         )}
+        style={{ background: '#001F54', borderRight: '1px solid rgba(90,155,213,0.2)' }}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className={cn(
-            "flex items-center gap-3 p-4 border-b border-border/40",
-            isCollapsed ? "lg:justify-center lg:px-2" : "px-6"
-          )}>
-            <div className="relative flex-shrink-0">
-              <Hexagon className={cn("text-primary transition-all duration-300", isCollapsed ? "lg:w-8 lg:h-8" : "w-10 h-10")} strokeWidth={1.5} />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className={cn("bg-primary rounded-full opacity-60 transition-all duration-300", isCollapsed ? "lg:w-3 lg:h-3" : "w-4 h-4")} />
-              </div>
-            </div>
-            <div className={cn("transition-all duration-300", isCollapsed ? "lg:hidden" : "")}>
-              <h1 className="font-heading font-bold text-lg tracking-tight">
-                <span className="text-primary">mikon</span>
-                <span className="text-foreground"> OSS</span>
+          <div
+            className={cn(
+              "flex items-center gap-3 p-4",
+              isCollapsed ? "lg:justify-center lg:px-2" : "px-4"
+            )}
+            style={{ borderBottom: '1px solid rgba(90,155,213,0.2)' }}
+          >
+            <img
+              src="/logos/isotipo.png"
+              alt="Mikon Insights"
+              className={cn(
+                "flex-shrink-0 object-contain transition-all duration-300",
+                isCollapsed ? "lg:w-8 lg:h-8 w-9 h-9" : "w-9 h-9"
+              )}
+            />
+            <div className={cn("transition-all duration-300 overflow-hidden", isCollapsed ? "lg:hidden" : "")}>
+              <h1 className="font-heading font-bold text-sm tracking-wide leading-tight">
+                <span style={{ color: '#ffffff' }}>MIKON </span>
+                <span style={{ color: '#EA711B' }}>INSIGHTS</span>
               </h1>
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                Anticipación Estratégica
+              <p className="text-[9px] uppercase tracking-[0.15em]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                OSS
               </p>
             </div>
-            <button 
-              className="ml-auto lg:hidden text-muted-foreground hover:text-foreground"
+            <button
+              className="ml-auto lg:hidden"
+              style={{ color: 'rgba(255,255,255,0.5)' }}
               onClick={onClose}
             >
               <X className="w-5 h-5" />
@@ -131,11 +137,9 @@ function Sidebar({ isOpen, onClose, isCollapsed, onToggleCollapse }: SidebarProp
                     to={item.path}
                     onClick={onClose}
                     className={cn(
-                      "flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200",
+                      "sidebar-nav-item",
                       isCollapsed ? "lg:justify-center lg:px-0" : "",
-                      isActive
-                        ? "text-primary bg-primary/10 border-l-2 border-primary"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      isActive ? "active" : ""
                     )}
                   >
                     <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
@@ -170,12 +174,13 @@ function Sidebar({ isOpen, onClose, isCollapsed, onToggleCollapse }: SidebarProp
           </nav>
 
           {/* Collapse toggle button - Desktop only */}
-          <div className="hidden lg:block p-2 border-t border-border/40">
+          <div className="hidden lg:block p-2" style={{ borderTop: '1px solid rgba(90,155,213,0.2)' }}>
             <button
               onClick={onToggleCollapse}
-              className={cn(
-                "w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200"
-              )}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg transition-all duration-200"
+              style={{ color: 'rgba(255,255,255,0.4)' }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.8)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}
             >
               {isCollapsed ? (
                 <ChevronRight className="w-5 h-5" />
@@ -302,9 +307,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         onToggleCollapse={handleToggleCollapse}
       />
       
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0" style={{ background: 'linear-gradient(155deg, #030C18 0%, #001F54 100%)', backgroundAttachment: 'fixed' }}>
         <Header onMenuClick={() => setSidebarOpen(true)} />
-        
+
         <main className="flex-1 p-4 lg:p-6 overflow-auto">
           <div className="max-w-7xl mx-auto animate-fade-in">
             {children}

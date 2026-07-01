@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { Hexagon, Mail, Lock, User, ArrowRight } from "lucide-react";
+import { Mail, Lock, User, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 
@@ -39,20 +39,15 @@ export default function AuthPage() {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm">
         {/* Logo */}
-        <div className="flex items-center justify-center gap-3 mb-8">
-           <div className="relative flex-shrink-0">
-              <Hexagon className="text-primary w-12 h-12" strokeWidth={1.5} />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="bg-primary rounded-full opacity-60 w-5 h-5" />
-              </div>
-            </div>
-          <div>
-            <h1 className="font-heading font-bold text-2xl tracking-tight leading-none">
-              <span className="text-primary">mikon</span>
-              <span className="text-foreground"> OSS</span>
+        <div className="flex flex-col items-center gap-3 mb-8">
+          <img src="/logos/isotipo.png" alt="Mikon Insights" className="w-16 h-16 object-contain" />
+          <div className="text-center">
+            <h1 className="font-heading font-bold text-xl tracking-wide leading-none">
+              <span style={{ color: '#ffffff' }}>MIKON </span>
+              <span style={{ color: '#EA711B' }}>INSIGHTS</span>
             </h1>
-            <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-1">
-              {t("auth.tagline")}
+            <p className="text-[9px] uppercase tracking-[0.2em] mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              OSS
             </p>
           </div>
         </div>
