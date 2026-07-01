@@ -72,6 +72,15 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      spacing: {
+        'custom-xs': 'var(--spacing-xs)',
+        'custom-sm': 'var(--spacing-sm)',
+        'custom-md': 'var(--spacing-md)',
+        'custom-lg': 'var(--spacing-lg)',
+        'custom-xl': 'var(--spacing-xl)',
+        'custom-xxl': 'var(--spacing-xxl)',
+        'custom-xxxl': 'var(--spacing-xxxl)',
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },

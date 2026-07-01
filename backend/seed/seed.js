@@ -235,7 +235,7 @@ const seedFixedCosts = async (expenses) => {
 // Main seed function
 const seed = async () => {
   try {
-    console.log('\n🌱 Starting Mikon OSS Database Seed...\n');
+    console.log('\n🌱 Starting Mikon Insights OSS Database Seed...\n');
     
     // Connect to MongoDB
     const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017';

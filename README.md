@@ -1,4 +1,4 @@
-# Mikon OSS - Business Intelligence Interno
+# Mikon Insights OSS - Business Intelligence Interno
 
 <div align="center">
   <img src="https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=node.js" />
@@ -7,17 +7,17 @@
   <img src="https://img.shields.io/badge/Tailwind-CSS-06B6D4?style=for-the-badge&logo=tailwindcss" />
 </div>
 
-## 🎯 ¿Qué es Mikon OSS?
+## 🎯 ¿Qué es Mikon Insights OSS?
 
-**Mikon OSS** es el sistema operativo interno de [Mikon Insights](https://mikoninsights.es) - una consultoría boutique de ciencia de datos aplicada a marketing y recursos humanos.
+**Mikon Insights OSS** es el sistema operativo interno de [Mikon Insights](https://mikoninsights.es) - una consultoría boutique de ciencia de datos aplicada a marketing y recursos humanos.
 
 > *"La brújula que te guía y conecta al éxito"*
 
-Así como Mikon Insights transforma datos complejos en **guías de anticipación** para sus clientes, Mikon OSS aplica esa misma filosofía internamente: monitorizar la rentabilidad, escalabilidad y eficiencia operativa **sin depender de perfiles técnicos**.
+Así como Mikon Insights transforma datos complejos en **guías de anticipación** para sus clientes, Mikon Insights OSS aplica esa misma filosofía internamente: monitorizar la rentabilidad, escalabilidad y eficiencia operativa **sin depender de perfiles técnicos**.
 
 ### La Filosofía Mikon
 
-| Principio | En Clientes | En Mikon OSS |
+| Principio | En Clientes | En Mikon Insights OSS |
 |-----------|-------------|--------------|
 | **Anticipación Estratégica** | Predicción de churn y attrition | Independence Score para prever riesgos |
 | **Sinergia sin Silos** | Alinea Marketing y RRHH | Unifica proyectos, gastos y módulos |

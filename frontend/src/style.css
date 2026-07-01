@@ -1,0 +1,76 @@
+/*
+  Mikon Insights Design Tokens
+  This file contains raw CSS variables for colors, spacings, border radiuses, and transitions.
+  Ensures strict adherence to custom stylesheet rules and manual CSS reuse capabilities.
+*/
+
+:root {
+  /* Brand Color Palette */
+  --mikon-primary: #5A9BD5;
+  --mikon-primary-dark: #3b7bb5;
+  --mikon-primary-light: #8cbbe5;
+  
+  --mikon-secondary: #EA711B;
+  --mikon-secondary-dark: #b54f0a;
+  --mikon-secondary-light: #f1985c;
+
+  --mikon-navy: #001F54;
+  --mikon-dark-bg: #030712;
+  --mikon-card-bg: #0b0f19;
+  
+  /* Status Colors */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+  --color-info: #3B82F6;
+
+  /* Standard Spacing Scale (4px grid system) */
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 1rem;      /* 16px */
+  --spacing-lg: 1.5rem;    /* 24px */
+  --spacing-xl: 2rem;      /* 32px */
+  --spacing-xxl: 3rem;     /* 48px */
+  --spacing-xxxl: 4rem;    /* 64px */
+
+  /* Layout and Sizing Helpers */
+  --container-max-width: 1280px;
+  --sidebar-width: 260px;
+  --header-height: 64px;
+
+  /* Typography Scale */
+  --font-size-xs: 0.75rem;   /* 12px */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;  /* 18px */
+  --font-size-xl: 1.25rem;   /* 20px */
+  --font-size-2xl: 1.5rem;   /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+
+  /* Design Primitive Values */
+  --mikon-border-radius: 0.75rem;
+  --mikon-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --mikon-transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  --mikon-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --mikon-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --mikon-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Custom reusable styles */
+.custom-border-glow {
+  border: 1px solid rgba(90, 155, 213, 0.2);
+  box-shadow: 0 0 15px rgba(90, 155, 213, 0.05);
+  transition: all var(--mikon-transition-normal);
+}
+
+.custom-border-glow:hover {
+  border-color: rgba(90, 155, 213, 0.4);
+  box-shadow: 0 0 25px rgba(90, 155, 213, 0.1);
+}
+
+.custom-text-gradient-primary {
+  background: linear-gradient(135deg, var(--mikon-primary), var(--mikon-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

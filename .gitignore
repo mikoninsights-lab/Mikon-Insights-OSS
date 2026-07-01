@@ -29,6 +29,7 @@ next-env.d.ts
 /build
 dist/
 dist
+design_system
 
 # Environment and credential files
 .env

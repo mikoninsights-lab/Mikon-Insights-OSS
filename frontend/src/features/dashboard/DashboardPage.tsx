@@ -1,4 +1,6 @@
 import { useDashboardData } from '@/hooks/useDashboardData';
+import { useIndependenceScore } from '@/hooks/useIndependenceScore';
+import { useCapacityAlert } from '@/hooks/useCapacityAlert';
 import { 
   ShieldCheck, 
   TrendingUp, 
@@ -23,13 +25,17 @@ const formatCurrency = (value: number) => {
 
 export default function DashboardPage() {
   const { 
-    independenceScore, 
     totalFixedCosts, 
     scalableRevenue, 
     totalRevenue,
     efficiencyScore,
-    activeProjects 
+    activeProjects,
+    committedHours,
+    maxCapacity
   } = useDashboardData();
+
+  const independenceScore = useIndependenceScore(scalableRevenue, totalFixedCosts);
+  const capacityAlert = useCapacityAlert(committedHours, maxCapacity);
 
   const getScoreStatus = (score: number) => {
     if (score >= 150) return { label: 'Óptimo', color: 'text-emerald-400', badge: 'badge-success' };
@@ -139,7 +145,7 @@ export default function DashboardPage() {
           { title: 'Ingresos Totales', value: formatCurrency(totalRevenue), icon: TrendingUp, color: 'text-primary' },
           { title: 'Gastos Mensuales', value: formatCurrency(totalFixedCosts), icon: CreditCard, color: 'text-red-400' },
           { title: 'Margen Bruto', value: formatCurrency(totalRevenue - totalFixedCosts), icon: ArrowUpRight, color: 'text-emerald-400' },
-          { title: 'Alerta Capacidad', value: 'Baja', icon: AlertTriangle, color: 'text-blue-400' },
+          { title: 'Alerta Capacidad', value: `${capacityAlert.percentage}% (${capacityAlert.status})`, icon: AlertTriangle, color: capacityAlert.color },
         ].map((item, i) => (
           <Card key={i} className="tech-card">
             <CardContent className="p-4">

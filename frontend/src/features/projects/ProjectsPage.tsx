@@ -10,6 +10,7 @@ import {
   Trash2,
   Briefcase,
 } from 'lucide-react';
+import { useEfficiencyScore } from '@/hooks/useEfficiencyScore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -107,6 +108,12 @@ export default function ProjectsPage() {
   });
   const projects = data?.projects || [];
 
+  const avgBudget = projects.length > 0 ? projects.reduce((acc: number, p: any) => acc + (p.totalBudget || 0), 0) / projects.length : 0;
+  const avgModules = projects.length > 0 ? projects.reduce((acc: number, p: any) => acc + (p.linkedServiceIds?.length || 0), 0) / projects.length : 0;
+  const avgHours = projects.length > 0 ? projects.reduce((acc: number, p: any) => acc + (p.actualHours || p.estimatedHours || 0), 0) / projects.length : 0;
+  
+  const portfolioEfficiency = useEfficiencyScore(avgBudget, avgModules, avgHours);
+
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['projects'] });
 
   const createMutation = useMutation({
@@ -172,10 +179,17 @@ export default function ProjectsPage() {
           </h1>
           <p className="text-muted-foreground text-sm">Gestiona la cartera de operaciones estratégicas de Mikon</p>
         </div>
-        <Button onClick={openCreate} className="btn-primary">
-          <Plus className="w-4 h-4 mr-2" />
-          Nuevo Proyecto
-        </Button>
+        <div className="flex items-center gap-4">
+          {projects.length > 0 && (
+            <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 px-3 py-1">
+              Eficiencia Media: {portfolioEfficiency}%
+            </Badge>
+          )}
+          <Button onClick={openCreate} className="btn-primary">
+            <Plus className="w-4 h-4 mr-2" />
+            Nuevo Proyecto
+          </Button>
+        </div>
       </div>
 
       <Card className="tech-card p-4">

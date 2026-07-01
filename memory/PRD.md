@@ -1,7 +1,7 @@
-# Mikon OSS - Product Requirements Document
+# Mikon Insights OSS - Product Requirements Document
 
 ## Project Overview
-**Mikon OSS** es una plataforma de Business Intelligence Interno para Mikon Insights, una consultoría boutique de ciencia de datos aplicada a marketing y talento (HR).
+**Mikon Insights OSS** es una plataforma de Business Intelligence Interno para Mikon Insights, una consultoría boutique de ciencia de datos aplicada a marketing y talento (HR).
 
 ## Architecture
 

@@ -55,7 +55,7 @@ app.use('/api/audit-logs', auditLogRoutes);
 // Health check
 app.get('/api', (req, res) => {
   res.json({ 
-    message: 'Mikon OSS API v1.0',
+    message: 'Mikon Insights OSS API v1.0',
     status: 'healthy',
     timestamp: new Date().toISOString()
   });
@@ -82,7 +82,7 @@ const startServer = async () => {
   await connectDB();
   
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Mikon OSS Server running on port ${PORT}`);
+    console.log(`🚀 Mikon Insights OSS Server running on port ${PORT}`);
     console.log(`   API: http://localhost:${PORT}/api`);
   });
 };

@@ -1,7 +1,7 @@
 {
-  "name": "mikon-oss-backend",
+  "name": "mikon-insights-oss-backend",
   "version": "1.0.0",
-  "description": "Mikon OSS - Business Intelligence Platform Backend",
+  "description": "Mikon Insights OSS - Business Intelligence Platform Backend",
   "main": "server.js",
   "type": "module",
   "scripts": {

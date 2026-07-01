@@ -42,7 +42,7 @@ router.post('/generate', authenticateToken, async (req, res) => {
     const modelName = MODEL_MAP[model] || MODEL_MAP.flash;
     const typeInstruction = CONTENT_TYPE_INSTRUCTIONS[contentType] || CONTENT_TYPE_INSTRUCTIONS.linkedin;
 
-    const systemPrompt = `Eres un ghostwriter senior especializado en Data Science y consultoría B2B para Mikon OSS, una consultoría de anticipación estratégica basada en datos. Tu voz es experta, accesible, con un toque de autoridad técnica pero sin jerga innecesaria. Siempre respondes en español de España, con un tono directo y orientado a resultados.`;
+    const systemPrompt = `Eres un ghostwriter senior especializado en Data Science y consultoría B2B para Mikon Insights OSS, una consultoría de anticipación estratégica basada en datos. Tu voz es experta, accesible, con un toque de autoridad técnica pero sin jerga innecesaria. Siempre respondes en español de España, con un tono directo y orientado a resultados.`;
 
     const userPrompt = `Genera ${typeInstruction}.
 

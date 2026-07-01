@@ -15,6 +15,9 @@ export function useDashboardData() {
     independenceScore: 0,
     efficiencyScore: 0,
     activeProjects: 0,
+    capacityUsage: 0,
+    maxCapacity: 160,
+    committedHours: 0,
   };
 
   return {
@@ -24,5 +27,8 @@ export function useDashboardData() {
     independenceScore: kpis.independenceScore,
     efficiencyScore: kpis.efficiencyScore,
     activeProjects: kpis.activeProjects,
+    capacityUsage: kpis.capacityUsage,
+    maxCapacity: kpis.maxCapacity,
+    committedHours: kpis.committedHours,
   };
 }
