@@ -182,7 +182,9 @@ export default function ServicesPage() {
     onError: (err: any) => { toast.error(err.message); setDeleteTarget(null); },
   });
 
-  const filteredServices = services.filter((s: any) => !categoryFilter || s.category === categoryFilter);
+  const availableCategories = [...new Set((services as any[]).map((s) => s.category))].sort() as string[];
+
+  const filteredServices = (services as any[]).filter((s) => !categoryFilter || s.category === categoryFilter);
 
   const groupedServices = filteredServices.reduce((acc: any, service: any) => {
     if (!acc[service.category]) acc[service.category] = [];
@@ -242,7 +244,7 @@ export default function ServicesPage() {
                 </SelectTrigger>
                 <SelectContent>
                     <SelectItem value="all">Todas las categorías</SelectItem>
-                    {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                    {availableCategories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                 </SelectContent>
             </Select>
           </div>
