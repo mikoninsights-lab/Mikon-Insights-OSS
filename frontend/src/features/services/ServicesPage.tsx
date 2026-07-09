@@ -39,6 +39,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { getServices, createService, updateService, deleteService } from '@/lib/api';
+import { useAuth } from '@/context/AuthContext';
 
 const CATEGORIES = [
   'N1: Auditoría de Salud',
@@ -79,7 +80,7 @@ const getCategoryBadge = (category: string) => {
   return colors[category] || 'bg-muted text-muted-foreground';
 };
 
-function ServiceCard({ service, onEdit, onDelete }: any) {
+function ServiceCard({ service, onEdit, onDelete, isAdmin }: any) {
   return (
     <Card className="tech-card-hover group border-border/40 overflow-hidden">
       <CardContent className="p-5">
@@ -90,23 +91,25 @@ function ServiceCard({ service, onEdit, onDelete }: any) {
               {service.category}
             </Badge>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <MoreVertical className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onEdit(service)}>
-                <Edit className="w-4 h-4 mr-2" />
-                Editar
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onDelete(service)} className="text-destructive">
-                <Trash2 className="w-4 h-4 mr-2" />
-                Eliminar
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {isAdmin && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <MoreVertical className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => onEdit(service)}>
+                  <Edit className="w-4 h-4 mr-2" />
+                  Editar
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onDelete(service)} className="text-destructive">
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Eliminar
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
 
         <p className="text-xs text-muted-foreground mb-6 line-clamp-2 leading-relaxed">
@@ -150,6 +153,7 @@ const emptyForm = { name: '', description: '', category: CATEGORIES[0], basePric
 
 export default function ServicesPage() {
   const queryClient = useQueryClient();
+  const { isAdmin } = useAuth();
   const [categoryFilter, setCategoryFilter] = useState('');
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -229,10 +233,12 @@ export default function ServicesPage() {
           </h1>
           <p className="text-muted-foreground text-sm">Arquitectura de Anticipación y Módulos MicroSaaS de Mikon Insights</p>
         </div>
-        <Button onClick={openCreate} className="btn-primary">
-          <Plus className="w-4 h-4 mr-2" />
-          Nuevo Servicio
-        </Button>
+        {isAdmin && (
+          <Button onClick={openCreate} className="btn-primary">
+            <Plus className="w-4 h-4 mr-2" />
+            Nuevo Servicio
+          </Button>
+        )}
       </div>
 
       <Card className="tech-card p-4">
@@ -272,6 +278,7 @@ export default function ServicesPage() {
                               service={service}
                               onEdit={openEdit}
                               onDelete={(s: any) => setDeleteTarget(s)}
+                              isAdmin={isAdmin}
                           />
                       ))}
                   </div>
