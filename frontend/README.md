@@ -1,73 +1,79 @@
-# React + TypeScript + Vite
+# Mikon Insights OSS — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Cliente React del panel de control interno de Mikon Insights. Ver el [README general](../README.md) para el contexto de negocio y el [README de backend](../backend/README.md) para la API.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Categoría | Tecnología |
+|---|---|
+| Build | Vite 6 |
+| Framework | React 19 + TypeScript |
+| Estilos | Tailwind CSS 3 + shadcn/ui (Radix UI) |
+| Estado de servidor | TanStack Query (React Query) |
+| Formularios | react-hook-form + Zod 4 |
+| Routing | react-router-dom 7 |
+| Animación | Framer Motion |
+| Gráficos | Recharts |
+| i18n | react-i18next (ES / EN / CA) |
+| Notificaciones | Sonner (toasts) |
 
-## React Compiler
+## Arquitectura: Folder-by-Feature
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+/frontend/src
+├── features/            # Una carpeta por dominio de negocio, no por tipo de archivo
+│   ├── auth/             # Login / registro
+│   ├── dashboard/         # KPIs, Independence Score, gráfico de evolución
+│   ├── projects/          # CRUD de proyectos (filtros y formulario extraídos como subcomponentes)
+│   ├── expenses/          # CRUD de gastos fijos
+│   ├── services/          # Catálogo de servicios/módulos
+│   ├── pipeline/           # Sales pipeline (leads)
+│   ├── simulator/          # Simulador de ROI y calculadora SaaS
+│   ├── ghostwriter/         # Generación de contenido con IA
+│   ├── audit/               # Historial de auditoría (solo Admin)
+│   └── Layout.tsx            # Shell: sidebar + header, usado por todas las rutas protegidas
+├── hooks/                # Hooks de dominio reutilizables entre features (ver abajo)
+├── context/               # AuthContext (JWT, usuario actual, rol)
+├── components/ui/          # Componentes shadcn/ui (Button, Card, Dialog, Select…)
+├── lib/                   # Cliente API (api.ts) y utilidades (utils.ts)
+├── i18n/                  # Configuración de react-i18next + locales/{es,en,ca}.json
+├── style.css               # Tokens de marca: colores, espaciado, tipografía, clases reutilizables
+└── index.css                # Variables shadcn (HSL) + Tailwind + @layer components
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Cada feature es autocontenida: su página, subcomponentes y lógica de UI viven en la misma carpeta. La lógica de dominio reutilizable (cálculos, no fetching) se extrae a `hooks/`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Hooks avanzados
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **`useROISimulator`** — `useReducer` con acciones tipadas (`SET_HOURS`, `SET_MODULES`, `CALCULATE`…) para el simulador de ROI: separa el estado de los inputs del cálculo derivado, evitando recalcular en cada render.
+- **`useIndependenceScore`** / **`useCapacityAlert`** / **`useEfficiencyScore`** — `useMemo` sobre datos del dashboard para evitar recomputar ratios financieros en cada render.
+- **`useDashboardData`** — encapsula el `useQuery` del endpoint `/analytics/dashboard` y expone los campos que consumen las tarjetas de KPIs.
+- **`useSaaSSimulator`** — cálculo de proyección de ingresos recurrentes para la calculadora SaaS.
+
+## Sistema de diseño
+
+- **`style.css`**: variables CSS de marca (`--mikon-primary`, `--mikon-secondary`, `--mikon-navy`…), escala de espaciado, tipografía y clases reutilizables (`.tech-card`, `.btn-primary`, `.sidebar-nav-item`, `.kpi-card`…).
+- **`index.css`**: variables HSL que consume shadcn/ui (`--background`, `--primary`…) más la configuración de Tailwind (`@layer components`). El modo oscuro está forzado (`darkMode: "class"` + `<html class="dark">`).
+
+## Internacionalización
+
+`react-i18next` con 3 idiomas (`es`/`en`/`ca`), selector en el header, persistencia en `localStorage`. Los textos viven en `src/i18n/locales/{es,en,ca}.json`, agrupados por feature (`dashboard.*`, `projects.*`, `common.*`…).
+
+## Ejecutar en local
+
+```bash
+npm install
+npm run dev       # http://localhost:5173
+npm run build     # tsc -b && vite build
+npm run lint
 ```
+
+Variables de entorno (`.env`):
+
+```env
+VITE_BACKEND_URL=http://localhost:8001
+```
+
+## Autenticación
+
+`AuthContext` guarda el JWT y el usuario decodificado, y expone `isAuthenticated` / `isAdmin`. Las rutas protegidas (`App.tsx`) redirigen a `/auth` si no hay sesión, y las que requieren rol Admin (`requireAdmin`) redirigen al dashboard si el usuario no cumple el rol.

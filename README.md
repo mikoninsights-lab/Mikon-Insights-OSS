@@ -15,6 +15,13 @@
 
 Así como Mikon Insights transforma datos complejos en **guías de anticipación** para sus clientes, Mikon Insights OSS aplica esa misma filosofía internamente: monitorizar la rentabilidad, escalabilidad y eficiencia operativa **sin depender de perfiles técnicos**.
 
+### Documentación
+
+Este README cubre la visión general y el modelo de negocio. Para el detalle técnico de cada mitad de la aplicación:
+
+- **[Backend](./backend/README.md)** — arquitectura MVC, endpoints, seed de datos, variables de entorno.
+- **[Frontend](./frontend/README.md)** — arquitectura folder-by-feature, hooks avanzados, sistema de diseño, i18n.
+
 ### La Filosofía Mikon Insights
 
 | Principio | En Clientes | En Mikon Insights OSS |
@@ -69,12 +76,15 @@ Independence Score = (Ingresos Escalables) / (Gastos Fijos Mensuales) × 100
 ### Backend (Node.js)
 ```
 /backend
-├── models/          # Mongoose schemas (User, Service, Project, FixedCost)
-├── routes/          # Express routers con validación Zod
+├── models/          # Mongoose schemas (User, Service, Project, FixedCost, AuditLog)
+├── controllers/     # Lógica de negocio (una función por endpoint)
+├── routes/          # Express routers: middleware + validación Zod, delegan al controller
 ├── middleware/      # JWT auth middleware
 ├── seed/            # Script de ingesta desde CSV
 └── server.js        # Express app
 ```
+
+Separación MVC estricta: las rutas no contienen lógica de negocio, solo componen middleware con la función del controller correspondiente. Detalle completo en el [README de backend](./backend/README.md#arquitectura-mvc).
 
 ### Frontend (React)
 ```
@@ -210,6 +220,12 @@ yarn build      # Producción
 |-------|----------|-----|
 | admin@mikon.com | admin123 | Admin |
 | manager@mikon.com | manager123 | Manager |
+
+## 🔭 Mejoras futuras
+
+- **Índices MongoDB** dedicados en `Project` (`status`, `category`) para acelerar filtrados según crezca el volumen.
+- **Caché de servidor** (Redis) si el número de usuarios concurrentes lo justifica — con el volumen actual no aporta beneficio real; React Query ya cubre la caché de cliente.
+- **Load testing** (k6/Artillery) antes de un eventual salto a tráfico concurrente real.
 
 ## 📝 Entrega - Rock The Code
 
