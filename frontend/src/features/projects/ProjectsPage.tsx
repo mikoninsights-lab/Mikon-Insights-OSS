@@ -110,6 +110,7 @@ export default function ProjectsPage() {
 
   const handleSubmit = () => {
     if (!form.name.trim()) { toast.error('El nombre es obligatorio'); return; }
+    if (form.totalBudget < 0) { toast.error('El presupuesto no puede ser negativo'); return; }
     if (editingProject) {
       updateMutation.mutate({ id: editingProject._id, data: form });
     } else {

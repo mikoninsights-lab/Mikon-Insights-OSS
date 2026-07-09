@@ -78,6 +78,7 @@ export function ProjectFormDialog({
               <Label>Presupuesto (€)</Label>
               <Input
                 type="number"
+                min={0}
                 value={form.totalBudget}
                 onChange={(e) => onFormChange({ ...form, totalBudget: Number(e.target.value) })}
                 className="input-field"

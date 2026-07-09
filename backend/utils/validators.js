@@ -64,12 +64,12 @@ export const projectSchema = z.object({
     'Puntual',
     'Pay per Use'
   ]),
-  totalBudget: z.number().optional().default(0),
-  estimatedHours: z.number().optional().default(0),
-  actualHours: z.number().optional().default(0),
+  totalBudget: z.number().min(0, 'Budget must be positive').optional().default(0),
+  estimatedHours: z.number().min(0, 'Estimated hours must be positive').optional().default(0),
+  actualHours: z.number().min(0, 'Actual hours must be positive').optional().default(0),
   status: z.enum(['Lead', 'In Progress', 'Completed', 'Cancelled']).optional().default('Lead'),
   techStack: z.array(z.string()).optional().default([]),
-  clientEconomicImpact: z.number().optional().default(0)
+  clientEconomicImpact: z.number().min(0, 'Economic impact must be positive').optional().default(0)
 });
 
 export const projectUpdateSchema = projectSchema.partial();
