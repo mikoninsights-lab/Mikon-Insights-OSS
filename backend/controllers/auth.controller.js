@@ -123,12 +123,26 @@ export const getMe = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const { maxHoursCapacity } = req.body;
+    const { username, maxHoursCapacity } = req.body;
+
+    if (username) {
+      const existingUser = await User.findOne({ username, _id: { $ne: req.user.id } });
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          message: 'Username already taken'
+        });
+      }
+    }
+
+    const update = {};
+    if (username) update.username = username;
+    if (maxHoursCapacity !== undefined) update.maxHoursCapacity = maxHoursCapacity;
 
     const user = await User.findByIdAndUpdate(
       req.user.id,
-      { maxHoursCapacity },
-      { new: true }
+      update,
+      { new: true, runValidators: true }
     ).select('-password');
 
     res.json({

@@ -65,6 +65,9 @@ export async function register(username: string, email: string, password: string
 
 export const getMe = () => request<BackendUser>('/api/auth/me');
 
+export const updateProfile = (data: { username?: string; maxHoursCapacity?: number }) =>
+  request<BackendUser>('/api/auth/profile', { method: 'PUT', body: JSON.stringify(data) });
+
 // ---- Projects ----
 export interface PaginatedResponse {
   pagination: { page: number; limit: number; total: number; pages: number };

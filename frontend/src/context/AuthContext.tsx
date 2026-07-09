@@ -4,6 +4,7 @@ import {
   login as apiLogin,
   register as apiRegister,
   getMe,
+  updateProfile as apiUpdateProfile,
   getToken,
   clearToken,
   type BackendUser,
@@ -16,6 +17,7 @@ interface AuthContextType {
   isAdmin: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
+  updateProfile: (data: { username?: string; maxHoursCapacity?: number }) => Promise<void>;
   logout: () => void;
 }
 
@@ -59,6 +61,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
+  const updateProfile = async (data: { username?: string; maxHoursCapacity?: number }) => {
+    const updatedUser = await apiUpdateProfile(data);
+    setUser(updatedUser);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -68,6 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAdmin: user?.role === 'Admin',
         login,
         register,
+        updateProfile,
         logout,
       }}
     >

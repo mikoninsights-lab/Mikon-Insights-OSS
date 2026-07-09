@@ -13,6 +13,7 @@ import ServicesPage from '@/features/services/ServicesPage';
 import PipelinePage from '@/features/pipeline/PipelinePage';
 import GhostwriterPage from '@/features/ghostwriter/GhostwriterPage';
 import AuditLogPage from '@/features/audit/AuditLogPage';
+import ProfilePage from '@/features/profile/ProfilePage';
 
 // Create QueryClient instance
 const queryClient = new QueryClient({
@@ -138,6 +139,15 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <GhostwriterPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
           </ProtectedRoute>
         }
       />

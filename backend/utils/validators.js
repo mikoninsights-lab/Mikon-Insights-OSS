@@ -13,6 +13,11 @@ export const userLoginSchema = z.object({
   password: z.string().min(1, 'Password is required')
 });
 
+export const updateProfileSchema = z.object({
+  username: z.string().min(3, 'Username must be at least 3 characters').optional(),
+  maxHoursCapacity: z.coerce.number().positive('Max hours capacity must be positive').optional()
+});
+
 // Service Schemas
 export const serviceSchema = z.object({
   name: z.string().min(1, 'Name is required'),
