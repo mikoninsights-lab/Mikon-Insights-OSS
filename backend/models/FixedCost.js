@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 const fixedCostSchema = new mongoose.Schema({
   structureId: {
     type: Number,
-    unique: true
+    unique: true,
+    sparse: true
   },
   concept: {
     type: String,

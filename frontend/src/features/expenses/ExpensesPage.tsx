@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { format } from 'date-fns';
 import {
   Plus,
   Filter,
@@ -133,6 +134,10 @@ export default function ExpensesPage() {
       toast.error('El concepto es obligatorio');
       return;
     }
+    if (!form.amount || form.amount <= 0) {
+      toast.error('El importe debe ser mayor que 0');
+      return;
+    }
     if (editingExpense) {
       updateMutation.mutate({ id: editingExpense._id, data: form });
     } else {
@@ -195,6 +200,8 @@ export default function ExpensesPage() {
                 <TableHead className="table-header">Concepto</TableHead>
                 <TableHead className="table-header">Categoría</TableHead>
                 <TableHead className="table-header">Frecuencia</TableHead>
+                <TableHead className="table-header">Vencimiento</TableHead>
+                <TableHead className="table-header">Estado</TableHead>
                 <TableHead className="table-header text-right">Importe</TableHead>
                 <TableHead className="table-header w-[60px]"></TableHead>
               </TableRow>
@@ -203,17 +210,19 @@ export default function ExpensesPage() {
               {isLoading ? (
                 Array.from({ length: 5 }).map((_, i) => (
                   <TableRow key={i}>
-                    <TableCell colSpan={5}><Skeleton className="h-8 w-full" /></TableCell>
+                    <TableCell colSpan={7}><Skeleton className="h-8 w-full" /></TableCell>
                   </TableRow>
                 ))
               ) : filteredExpenses.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                  <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
                     Sin gastos todavía
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredExpenses.map((expense: any) => (
+                filteredExpenses.map((expense: any) => {
+                  const isExecuted = expense.dueDate && new Date(expense.dueDate) <= new Date();
+                  return (
                   <TableRow key={expense._id} className="table-row">
                     <TableCell className="font-medium">{expense.concept}</TableCell>
                     <TableCell>
@@ -222,6 +231,19 @@ export default function ExpensesPage() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">{expense.frequency}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {expense.dueDate ? format(new Date(expense.dueDate), 'dd/MM/yyyy') : '—'}
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant="outline"
+                        className={isExecuted
+                          ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                          : 'bg-amber-500/20 text-amber-400 border-amber-500/30'}
+                      >
+                        {isExecuted ? 'Ejecutado' : 'Pendiente'}
+                      </Badge>
+                    </TableCell>
                     <TableCell className="text-right font-mono font-bold">
                       {formatCurrency(expense.amount)}
                     </TableCell>
@@ -248,7 +270,8 @@ export default function ExpensesPage() {
                       </DropdownMenu>
                     </TableCell>
                   </TableRow>
-                ))
+                  );
+                })
               )}
             </TableBody>
           </Table>
@@ -277,7 +300,9 @@ export default function ExpensesPage() {
                 <Label>Importe (€)</Label>
                 <Input
                   type="number"
-                  value={form.amount}
+                  min={0.01}
+                  step={0.01}
+                  value={form.amount || ''}
                   onChange={(e) => setForm({ ...form, amount: Number(e.target.value) })}
                   className="input-field"
                 />
