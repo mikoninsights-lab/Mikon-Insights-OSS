@@ -113,7 +113,13 @@ export default function AuthPage() {
 
           <div className="mt-8 text-center">
             <button
-              onClick={() => { setMode(mode === "login" ? "signup" : "login"); setError(""); }}
+              onClick={() => {
+                setMode(mode === "login" ? "signup" : "login");
+                setError("");
+                setEmail("");
+                setPassword("");
+                setUsername("");
+              }}
               className="text-xs text-muted-foreground hover:text-primary transition-colors uppercase tracking-wider font-medium"
             >
               {mode === "login" ? t("auth.switchToSignup") : t("auth.switchToLogin")}
