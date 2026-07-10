@@ -213,6 +213,7 @@
     "moduleSavings": "Estalvi Mòduls",
     "results": "Resultats",
     "projectedROI": "ROI Projectat",
+    "roiExplainer": "El ROI és un ràtio d'eficiència: només reacciona a Mòduls XAI i Complexitat, perquè Hores i Tarifa escalen ingressos i costos per igual. Per veure l'impacte real de les 4 palanques, mira el Marge Projectat (€).",
     "efficiencyScore": "Puntuació d'Eficiència",
     "statusExcellent": "Excel·lent",
     "statusGood": "Bo",

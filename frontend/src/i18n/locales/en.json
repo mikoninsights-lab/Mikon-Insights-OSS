@@ -213,6 +213,7 @@
     "moduleSavings": "Module Savings",
     "results": "Results",
     "projectedROI": "Projected ROI",
+    "roiExplainer": "ROI is an efficiency ratio: it only reacts to XAI Modules and Complexity, because Hours and Rate scale revenue and costs equally. To see the real impact of all 4 levers, check the Projected Margin (€).",
     "efficiencyScore": "Efficiency Score",
     "statusExcellent": "Excellent",
     "statusGood": "Good",

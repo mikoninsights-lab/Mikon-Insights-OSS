@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useROISimulator } from '@/hooks/useROISimulator';
 import {
   Calculator,
-  TrendingUp,
   Clock,
   DollarSign,
   Package,
@@ -262,18 +261,36 @@ export default function SimulatorPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary/10 to-secondary/5 border border-primary/30">
-                <p className="stat-label mb-2">{t('simulator.projectedROI')}</p>
-                <p className={`text-5xl font-heading font-bold ${roiStatus.color}`}>
-                  {simulator.roi}%
+              <div className="grid grid-cols-2 gap-3">
+                <div className="text-center p-4 rounded-xl bg-gradient-to-br from-primary/10 to-secondary/5 border border-primary/30">
+                  <p className="stat-label mb-1">{t('simulator.projectedROI')}</p>
+                  <p className={`text-3xl font-heading font-bold ${roiStatus.color}`}>
+                    {simulator.roi}%
+                  </p>
+                  <Badge variant="outline" className={`mt-2 ${
+                    roiStatus.variant === 'success' ? 'badge-success' :
+                    roiStatus.variant === 'warning' ? 'badge-warning' :
+                    'badge-info'
+                  }`}>
+                    {roiStatus.label}
+                  </Badge>
+                </div>
+                <div className="text-center p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
+                  <p className="stat-label mb-1">{t('simulator.projectedMargin')}</p>
+                  <p className={`text-3xl font-heading font-bold ${simulator.projectedMargin > 0 ? 'text-emerald-400' : 'text-amber-400'}`}>
+                    {formatCurrency(simulator.projectedMargin)}
+                  </p>
+                  <Badge variant="outline" className="mt-2 badge-info">
+                    {t('simulator.netProfit')}
+                  </Badge>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-2 p-3 rounded-lg bg-muted/20 border border-border/40">
+                <Info className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {t('simulator.roiExplainer')}
                 </p>
-                <Badge variant="outline" className={`mt-3 ${
-                  roiStatus.variant === 'success' ? 'badge-success' :
-                  roiStatus.variant === 'warning' ? 'badge-warning' :
-                  'badge-info'
-                }`}>
-                  {roiStatus.label}
-                </Badge>
               </div>
 
               <div className="space-y-2">
@@ -285,14 +302,6 @@ export default function SimulatorPage() {
               </div>
             </CardContent>
           </Card>
-
-          <ResultCard
-            title={t('simulator.projectedMargin')}
-            value={formatCurrency(simulator.projectedMargin)}
-            subtitle={t('simulator.netProfit')}
-            icon={TrendingUp}
-            variant={simulator.projectedMargin > 0 ? 'success' : 'warning'}
-          />
 
           <ResultCard
             title={t('simulator.effectiveHours')}

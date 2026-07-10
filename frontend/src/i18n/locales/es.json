@@ -213,6 +213,7 @@
     "moduleSavings": "Ahorro Módulos",
     "results": "Resultados",
     "projectedROI": "ROI Proyectado",
+    "roiExplainer": "El ROI es un ratio de eficiencia: solo reacciona a Módulos XAI y Complejidad, porque Horas y Tarifa escalan ingresos y costes por igual. Para ver el impacto real de las 4 palancas, mira el Margen Proyectado (€).",
     "efficiencyScore": "Score de Eficiencia",
     "statusExcellent": "Excelente",
     "statusGood": "Bueno",
