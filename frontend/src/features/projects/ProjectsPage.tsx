@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { Plus, Briefcase, Edit, Trash2, MoreVertical } from 'lucide-react';
 import { useEfficiencyScore } from '@/hooks/useEfficiencyScore';
 import { Button } from '@/components/ui/button';
@@ -50,6 +51,7 @@ const formatCurrency = (value: number) =>
   }).format(value || 0);
 
 export default function ProjectsPage() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
@@ -71,19 +73,19 @@ export default function ProjectsPage() {
 
   const createMutation = useMutation({
     mutationFn: createProject,
-    onSuccess: () => { toast.success('Proyecto creado'); invalidate(); setIsModalOpen(false); },
+    onSuccess: () => { toast.success(t('projects.newProject')); invalidate(); setIsModalOpen(false); },
     onError: (err: any) => toast.error(err.message),
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: ProjectForm }) => updateProject(id, data),
-    onSuccess: () => { toast.success('Proyecto actualizado'); invalidate(); setIsModalOpen(false); },
+    onSuccess: () => { toast.success(t('projects.formTitleEdit')); invalidate(); setIsModalOpen(false); },
     onError: (err: any) => toast.error(err.message),
   });
 
   const deleteMutation = useMutation({
     mutationFn: deleteProject,
-    onSuccess: () => { toast.success('Proyecto eliminado'); invalidate(); setDeleteTarget(null); },
+    onSuccess: () => { toast.success(t('common.delete')); invalidate(); setDeleteTarget(null); },
     onError: (err: any) => { toast.error(err.message); setDeleteTarget(null); },
   });
 
@@ -109,8 +111,8 @@ export default function ProjectsPage() {
   };
 
   const handleSubmit = () => {
-    if (!form.name.trim()) { toast.error('El nombre es obligatorio'); return; }
-    if (form.totalBudget < 0) { toast.error('El presupuesto no puede ser negativo'); return; }
+    if (!form.name.trim()) { toast.error(t('common.nameRequired')); return; }
+    if (form.totalBudget < 0) { toast.error(t('projects.budgetNegative')); return; }
     if (editingProject) {
       updateMutation.mutate({ id: editingProject._id, data: form });
     } else {
@@ -126,21 +128,21 @@ export default function ProjectsPage() {
         <div>
           <h1 className="font-heading text-3xl font-bold flex items-center gap-3">
             <Briefcase className="w-8 h-8 text-primary" />
-            Proyectos
+            {t('projects.title')}
           </h1>
           <p className="text-muted-foreground text-sm">
-            Gestiona la cartera de operaciones estratégicas de Mikon Insights
+            {t('projects.subtitle')}
           </p>
         </div>
         <div className="flex items-center gap-4">
           {projects.length > 0 && (
             <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 px-3 py-1">
-              Eficiencia Media: {portfolioEfficiency}%
+              {t('projects.avgEfficiency')}: {portfolioEfficiency}%
             </Badge>
           )}
           <Button onClick={openCreate} className="btn-primary">
             <Plus className="w-4 h-4 mr-2" />
-            Nuevo Proyecto
+            {t('projects.newProject')}
           </Button>
         </div>
       </div>
@@ -159,10 +161,10 @@ export default function ProjectsPage() {
           <Table>
             <TableHeader>
               <TableRow className="border-b border-border/40 hover:bg-transparent">
-                <TableHead className="table-header">Proyecto / Cliente</TableHead>
-                <TableHead className="table-header">Categoría</TableHead>
-                <TableHead className="table-header">Estado</TableHead>
-                <TableHead className="table-header text-right">Presupuesto</TableHead>
+                <TableHead className="table-header">{t('projects.colProjectClient')}</TableHead>
+                <TableHead className="table-header">{t('projects.colCategory')}</TableHead>
+                <TableHead className="table-header">{t('projects.colStatus')}</TableHead>
+                <TableHead className="table-header text-right">{t('projects.colBudget')}</TableHead>
                 <TableHead className="table-header w-[60px]"></TableHead>
               </TableRow>
             </TableHeader>
@@ -176,7 +178,7 @@ export default function ProjectsPage() {
               ) : filteredProjects.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                    Sin proyectos todavía
+                    {t('projects.noProjects')}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -208,13 +210,13 @@ export default function ProjectsPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => openEdit(project)}>
-                            <Edit className="w-4 h-4 mr-2" />Editar
+                            <Edit className="w-4 h-4 mr-2" />{t('common.edit')}
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => setDeleteTarget(project)}
                             className="text-destructive focus:text-destructive"
                           >
-                            <Trash2 className="w-4 h-4 mr-2" />Eliminar
+                            <Trash2 className="w-4 h-4 mr-2" />{t('common.delete')}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -240,19 +242,19 @@ export default function ProjectsPage() {
       <Dialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <DialogContent className="modal-content sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>¿Eliminar proyecto?</DialogTitle>
+            <DialogTitle>{t('projects.deleteTitle')}</DialogTitle>
             <DialogDescription>
-              Esta acción no se puede deshacer. Se eliminará "{deleteTarget?.name}".
+              {t('common.confirmDeleteDesc', { name: deleteTarget?.name })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteTarget(null)}>Cancelar</Button>
+            <Button variant="outline" onClick={() => setDeleteTarget(null)}>{t('common.cancel')}</Button>
             <Button
               variant="destructive"
               onClick={() => deleteMutation.mutate(deleteTarget._id)}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? 'Eliminando...' : 'Eliminar'}
+              {deleteMutation.isPending ? t('common.deleting') : t('common.delete')}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -45,20 +46,21 @@ export function ProjectFormDialog({
   onSubmit,
   isSubmitting,
 }: ProjectFormDialogProps) {
+  const { t } = useTranslation();
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="modal-content sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="font-heading text-xl">
-            {editingProject ? 'Actualizar Operación' : 'Nueva Operación'}
+            {editingProject ? t('projects.formTitleEdit') : t('projects.formTitleNew')}
           </DialogTitle>
           <DialogDescription>
-            Configura los parámetros del proyecto estratégico
+            {t('projects.formDesc')}
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label>Nombre del Proyecto</Label>
+            <Label>{t('projects.fieldName')}</Label>
             <Input
               value={form.name}
               onChange={(e) => onFormChange({ ...form, name: e.target.value })}
@@ -66,7 +68,7 @@ export function ProjectFormDialog({
             />
           </div>
           <div className="space-y-2">
-            <Label>Cliente</Label>
+            <Label>{t('projects.fieldClient')}</Label>
             <Input
               value={form.client}
               onChange={(e) => onFormChange({ ...form, client: e.target.value })}
@@ -75,7 +77,7 @@ export function ProjectFormDialog({
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Presupuesto (€)</Label>
+              <Label>{t('projects.fieldBudget')}</Label>
               <Input
                 type="number"
                 min={0}
@@ -85,7 +87,7 @@ export function ProjectFormDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label>Estado</Label>
+              <Label>{t('projects.fieldStatus')}</Label>
               <Select
                 value={form.status}
                 onValueChange={(val) => onFormChange({ ...form, status: val })}
@@ -98,7 +100,7 @@ export function ProjectFormDialog({
             </div>
           </div>
           <div className="space-y-2">
-            <Label>Categoría</Label>
+            <Label>{t('projects.fieldCategory')}</Label>
             <Select
               value={form.category}
               onValueChange={(val) => onFormChange({ ...form, category: val })}
@@ -111,9 +113,9 @@ export function ProjectFormDialog({
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>{t('common.cancel')}</Button>
           <Button className="btn-primary" onClick={onSubmit} disabled={isSubmitting}>
-            {isSubmitting ? 'Guardando...' : 'Guardar Cambios'}
+            {isSubmitting ? t('common.saving') : t('common.save')}
           </Button>
         </DialogFooter>
       </DialogContent>

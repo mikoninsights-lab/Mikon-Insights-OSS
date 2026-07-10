@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import {
   Package,
   Plus,
@@ -81,6 +82,7 @@ const getCategoryBadge = (category: string) => {
 };
 
 function ServiceCard({ service, onEdit, onDelete, isAdmin }: any) {
+  const { t } = useTranslation();
   return (
     <Card className="tech-card-hover group border-border/40 overflow-hidden">
       <CardContent className="p-5">
@@ -101,11 +103,11 @@ function ServiceCard({ service, onEdit, onDelete, isAdmin }: any) {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => onEdit(service)}>
                   <Edit className="w-4 h-4 mr-2" />
-                  Editar
+                  {t('common.edit')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onDelete(service)} className="text-destructive">
                   <Trash2 className="w-4 h-4 mr-2" />
-                  Eliminar
+                  {t('common.delete')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -113,21 +115,21 @@ function ServiceCard({ service, onEdit, onDelete, isAdmin }: any) {
         </div>
 
         <p className="text-xs text-muted-foreground mb-6 line-clamp-2 leading-relaxed">
-          {service.description || 'Sin descripción detallada.'}
+          {service.description || t('services.noDescription')}
         </p>
 
         <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/30">
           <div className="flex items-center gap-2">
             <DollarSign className="w-4 h-4 text-primary" />
             <div>
-              <p className="text-[10px] uppercase font-bold text-muted-foreground">Precio Base</p>
+              <p className="text-[10px] uppercase font-bold text-muted-foreground">{t('services.basePrice')}</p>
               <p className="font-mono font-bold text-sm">{formatCurrency(service.basePrice)}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4 text-primary" />
             <div>
-              <p className="text-[10px] uppercase font-bold text-muted-foreground">Desarrollo</p>
+              <p className="text-[10px] uppercase font-bold text-muted-foreground">{t('services.development')}</p>
               <p className="font-mono font-bold text-sm">{service.developmentCostHours || 0}h</p>
             </div>
           </div>
@@ -137,11 +139,11 @@ function ServiceCard({ service, onEdit, onDelete, isAdmin }: any) {
             <div className="flex items-center gap-1.5">
                 <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
                 <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">
-                  {service.isScalable ? 'Escalable' : 'Activo'}
+                  {service.isScalable ? t('services.scalable') : t('services.active')}
                 </span>
             </div>
             {service.basePrice > 5000 && (
-                <Badge className="bg-primary/10 text-primary border-none text-[9px] font-bold">ALTO VALOR</Badge>
+                <Badge className="bg-primary/10 text-primary border-none text-[9px] font-bold">{t('services.highValue')}</Badge>
             )}
         </div>
       </CardContent>
@@ -152,6 +154,7 @@ function ServiceCard({ service, onEdit, onDelete, isAdmin }: any) {
 const emptyForm = { name: '', description: '', category: CATEGORIES[0], basePrice: 0, developmentCostHours: 0 };
 
 export default function ServicesPage() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { isAdmin } = useAuth();
   const [categoryFilter, setCategoryFilter] = useState('');
@@ -170,19 +173,19 @@ export default function ServicesPage() {
 
   const createMutation = useMutation({
     mutationFn: createService,
-    onSuccess: () => { toast.success('Servicio creado'); invalidate(); setIsModalOpen(false); },
+    onSuccess: () => { toast.success(t('services.newService')); invalidate(); setIsModalOpen(false); },
     onError: (err: any) => toast.error(err.message),
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: any }) => updateService(id, data),
-    onSuccess: () => { toast.success('Servicio actualizado'); invalidate(); setIsModalOpen(false); },
+    onSuccess: () => { toast.success(t('services.formTitleEdit')); invalidate(); setIsModalOpen(false); },
     onError: (err: any) => toast.error(err.message),
   });
 
   const deleteMutation = useMutation({
     mutationFn: deleteService,
-    onSuccess: () => { toast.success('Servicio eliminado'); invalidate(); setDeleteTarget(null); },
+    onSuccess: () => { toast.success(t('common.delete')); invalidate(); setDeleteTarget(null); },
     onError: (err: any) => { toast.error(err.message); setDeleteTarget(null); },
   });
 
@@ -211,7 +214,7 @@ export default function ServicesPage() {
 
   const handleSubmit = () => {
     if (!form.name.trim()) {
-      toast.error('El nombre es obligatorio');
+      toast.error(t('common.nameRequired'));
       return;
     }
     if (editingService) {
@@ -229,27 +232,27 @@ export default function ServicesPage() {
         <div>
           <h1 className="font-heading text-3xl font-bold flex items-center gap-3">
             <Package className="w-8 h-8 text-primary" />
-            Catálogo de Servicios
+            {t('services.title')}
           </h1>
-          <p className="text-muted-foreground text-sm">Arquitectura de Anticipación y Módulos MicroSaaS de Mikon Insights</p>
+          <p className="text-muted-foreground text-sm">{t('services.subtitle')}</p>
         </div>
         {isAdmin && (
           <Button onClick={openCreate} className="btn-primary">
             <Plus className="w-4 h-4 mr-2" />
-            Nuevo Servicio
+            {t('services.newService')}
           </Button>
         )}
       </div>
 
       <Card className="tech-card p-4">
           <div className="flex flex-col md:flex-row gap-4 items-center">
-            <p className="text-xs font-bold text-muted-foreground uppercase whitespace-nowrap">Filtrar Catálogo:</p>
+            <p className="text-xs font-bold text-muted-foreground uppercase whitespace-nowrap">{t('services.filterCatalog')}</p>
             <Select value={categoryFilter || 'all'} onValueChange={(val) => setCategoryFilter(val === 'all' ? '' : val)}>
                 <SelectTrigger className="w-full md:w-64 input-field">
-                    <SelectValue placeholder="Todas las categorías" />
+                    <SelectValue placeholder={t('services.allCategories')} />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="all">Todas las categorías</SelectItem>
+                    <SelectItem value="all">{t('services.allCategories')}</SelectItem>
                     {availableCategories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                 </SelectContent>
             </Select>
@@ -261,7 +264,7 @@ export default function ServicesPage() {
           {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-48 w-full" />)}
         </div>
       ) : Object.keys(groupedServices).length === 0 ? (
-        <p className="text-center text-muted-foreground py-12">Sin servicios todavía</p>
+        <p className="text-center text-muted-foreground py-12">{t('services.noServices')}</p>
       ) : (
         <div className="space-y-12">
           {Object.entries(groupedServices).map(([category, catServices]: [string, any]) => (
@@ -291,13 +294,13 @@ export default function ServicesPage() {
         <DialogContent className="modal-content sm:max-w-lg">
           <DialogHeader>
             <DialogTitle className="font-heading text-xl">
-              {editingService ? 'Editar Servicio' : 'Nuevo Servicio Estratégico'}
+              {editingService ? t('services.formTitleEdit') : t('services.formTitleNew')}
             </DialogTitle>
-            <DialogDescription>Configura los parámetros del servicio en el catálogo</DialogDescription>
+            <DialogDescription>{t('services.formDesc')}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
              <div className="space-y-2">
-                <Label>Nombre del Servicio</Label>
+                <Label>{t('services.fieldName')}</Label>
                 <Input
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -306,7 +309,7 @@ export default function ServicesPage() {
                 />
              </div>
              <div className="space-y-2">
-                <Label>Descripción</Label>
+                <Label>{t('services.fieldDescription')}</Label>
                 <Input
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
@@ -315,7 +318,7 @@ export default function ServicesPage() {
              </div>
              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Precio Base (€)</Label>
+                  <Label>{t('services.fieldBasePrice')}</Label>
                   <Input
                     type="number"
                     value={form.basePrice}
@@ -324,7 +327,7 @@ export default function ServicesPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Horas de Desarrollo</Label>
+                  <Label>{t('services.fieldDevHours')}</Label>
                   <Input
                     type="number"
                     value={form.developmentCostHours}
@@ -334,7 +337,7 @@ export default function ServicesPage() {
                 </div>
              </div>
              <div className="space-y-2">
-                <Label>Categoría</Label>
+                <Label>{t('services.fieldCategory')}</Label>
                 <Select value={form.category} onValueChange={(val) => setForm({ ...form, category: val })}>
                   <SelectTrigger className="input-field"><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -344,9 +347,9 @@ export default function ServicesPage() {
              </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
+            <Button variant="outline" onClick={() => setIsModalOpen(false)}>{t('common.cancel')}</Button>
             <Button className="btn-primary" onClick={handleSubmit} disabled={isSubmitting}>
-              {isSubmitting ? 'Guardando...' : 'Guardar Servicio'}
+              {isSubmitting ? t('common.saving') : t('common.save')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -355,19 +358,19 @@ export default function ServicesPage() {
       <Dialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <DialogContent className="modal-content sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>¿Eliminar servicio?</DialogTitle>
+            <DialogTitle>{t('services.deleteTitle')}</DialogTitle>
             <DialogDescription>
-              Esta acción no se puede deshacer. Se eliminará "{deleteTarget?.name}".
+              {t('common.confirmDeleteDesc', { name: deleteTarget?.name })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteTarget(null)}>Cancelar</Button>
+            <Button variant="outline" onClick={() => setDeleteTarget(null)}>{t('common.cancel')}</Button>
             <Button
               variant="destructive"
               onClick={() => deleteMutation.mutate(deleteTarget._id)}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? 'Eliminando...' : 'Eliminar'}
+              {deleteMutation.isPending ? t('common.deleting') : t('common.delete')}
             </Button>
           </DialogFooter>
         </DialogContent>

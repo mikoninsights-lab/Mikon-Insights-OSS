@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Search, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -27,13 +28,14 @@ export function ProjectFilters({
   statusFilter,
   onStatusChange,
 }: ProjectFiltersProps) {
+  const { t } = useTranslation();
   return (
     <Card className="tech-card p-4">
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar por cliente o proyecto..."
+            placeholder={t('projects.searchPlaceholder')}
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
             className="pl-10 input-field"
@@ -45,10 +47,10 @@ export function ProjectFilters({
         >
           <SelectTrigger className="w-full md:w-56 input-field">
             <Filter className="w-4 h-4 mr-2" />
-            <SelectValue placeholder="Categoría" />
+            <SelectValue placeholder={t('projects.colCategory')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todas las categorías</SelectItem>
+            <SelectItem value="all">{t('projects.allCategories')}</SelectItem>
             {CATEGORIES.map((cat) => (
               <SelectItem key={cat} value={cat}>{cat}</SelectItem>
             ))}
@@ -59,10 +61,10 @@ export function ProjectFilters({
           onValueChange={(val) => onStatusChange(val === 'all' ? '' : val)}
         >
           <SelectTrigger className="w-full md:w-44 input-field">
-            <SelectValue placeholder="Estado" />
+            <SelectValue placeholder={t('projects.colStatus')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos los estados</SelectItem>
+            <SelectItem value="all">{t('projects.allStatuses')}</SelectItem>
             {STATUSES.map((status) => (
               <SelectItem key={status} value={status}>{status}</SelectItem>
             ))}

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 import {
   Plus,
   Filter,
@@ -79,6 +80,7 @@ const emptyForm = {
 };
 
 export default function ExpensesPage() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [categoryFilter, setCategoryFilter] = useState('');
 
@@ -97,19 +99,19 @@ export default function ExpensesPage() {
 
   const createMutation = useMutation({
     mutationFn: createExpense,
-    onSuccess: () => { toast.success('Gasto creado'); invalidate(); setIsModalOpen(false); },
+    onSuccess: () => { toast.success(t('expenses.newExpense')); invalidate(); setIsModalOpen(false); },
     onError: (err: any) => toast.error(err.message),
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: any }) => updateExpense(id, data),
-    onSuccess: () => { toast.success('Gasto actualizado'); invalidate(); setIsModalOpen(false); },
+    onSuccess: () => { toast.success(t('expenses.formTitleEdit')); invalidate(); setIsModalOpen(false); },
     onError: (err: any) => toast.error(err.message),
   });
 
   const deleteMutation = useMutation({
     mutationFn: deleteExpense,
-    onSuccess: () => { toast.success('Gasto eliminado'); invalidate(); setDeleteTarget(null); },
+    onSuccess: () => { toast.success(t('common.delete')); invalidate(); setDeleteTarget(null); },
     onError: (err: any) => { toast.error(err.message); setDeleteTarget(null); },
   });
 
@@ -131,11 +133,11 @@ export default function ExpensesPage() {
 
   const handleSubmit = () => {
     if (!form.concept.trim()) {
-      toast.error('El concepto es obligatorio');
+      toast.error(t('expenses.conceptRequired'));
       return;
     }
     if (!form.amount || form.amount <= 0) {
-      toast.error('El importe debe ser mayor que 0');
+      toast.error(t('expenses.amountInvalid'));
       return;
     }
     if (editingExpense) {
@@ -153,36 +155,36 @@ export default function ExpensesPage() {
         <div>
           <h1 className="font-heading text-3xl font-bold flex items-center gap-3">
             <CreditCard className="w-8 h-8 text-secondary" />
-            Gastos Fijos
+            {t('expenses.title')}
           </h1>
-          <p className="text-muted-foreground text-sm">Gestiona la estructura de costes operativos de Mikon Insights</p>
+          <p className="text-muted-foreground text-sm">{t('expenses.subtitle')}</p>
         </div>
         <Button onClick={openCreate} className="btn-secondary">
           <Plus className="w-4 h-4 mr-2" />
-          Nuevo Gasto
+          {t('expenses.newExpense')}
         </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="tech-card border-secondary/20 bg-secondary/5 p-6 md:col-span-1">
-          <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">Total (Filtrado)</p>
+          <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">{t('expenses.totalFiltered')}</p>
           <p className="text-4xl font-heading font-bold text-secondary">{formatCurrency(totalAmount)}</p>
           <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
             <div className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
-            Estructura de costes optimizada
+            {t('expenses.optimizedStructure')}
           </div>
         </Card>
 
         <Card className="tech-card p-4 md:col-span-2 flex items-center">
           <div className="w-full">
-            <p className="text-[10px] uppercase font-bold text-muted-foreground mb-3 ml-1">Filtrar por Categoría</p>
+            <p className="text-[10px] uppercase font-bold text-muted-foreground mb-3 ml-1">{t('expenses.filterByCategory')}</p>
             <Select value={categoryFilter || 'all'} onValueChange={(val) => setCategoryFilter(val === 'all' ? '' : val)}>
               <SelectTrigger className="w-full input-field h-12">
                 <Filter className="w-4 h-4 mr-2 text-secondary" />
-                <SelectValue placeholder="Todas las categorías" />
+                <SelectValue placeholder={t('expenses.colCategory')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todas las categorías</SelectItem>
+                <SelectItem value="all">{t('services.allCategories')}</SelectItem>
                 {CATEGORIES.map((cat) => (
                   <SelectItem key={cat} value={cat}>{cat}</SelectItem>
                 ))}
@@ -197,12 +199,12 @@ export default function ExpensesPage() {
           <Table>
             <TableHeader>
               <TableRow className="border-b border-border/40 hover:bg-transparent">
-                <TableHead className="table-header">Concepto</TableHead>
-                <TableHead className="table-header">Categoría</TableHead>
-                <TableHead className="table-header">Frecuencia</TableHead>
-                <TableHead className="table-header">Vencimiento</TableHead>
-                <TableHead className="table-header">Estado</TableHead>
-                <TableHead className="table-header text-right">Importe</TableHead>
+                <TableHead className="table-header">{t('expenses.colConcept')}</TableHead>
+                <TableHead className="table-header">{t('expenses.colCategory')}</TableHead>
+                <TableHead className="table-header">{t('expenses.colFrequency')}</TableHead>
+                <TableHead className="table-header">{t('expenses.colDueDate')}</TableHead>
+                <TableHead className="table-header">{t('expenses.colStatus')}</TableHead>
+                <TableHead className="table-header text-right">{t('expenses.colAmount')}</TableHead>
                 <TableHead className="table-header w-[60px]"></TableHead>
               </TableRow>
             </TableHeader>
@@ -216,7 +218,7 @@ export default function ExpensesPage() {
               ) : filteredExpenses.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
-                    Sin gastos todavía
+                    {t('expenses.noExpenses')}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -241,7 +243,7 @@ export default function ExpensesPage() {
                           ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
                           : 'bg-amber-500/20 text-amber-400 border-amber-500/30'}
                       >
-                        {isExecuted ? 'Ejecutado' : 'Pendiente'}
+                        {isExecuted ? t('expenses.statusExecuted') : t('expenses.statusPending')}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right font-mono font-bold">
@@ -257,14 +259,14 @@ export default function ExpensesPage() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => openEdit(expense)}>
                             <Edit className="w-4 h-4 mr-2" />
-                            Editar
+                            {t('common.edit')}
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => setDeleteTarget(expense)}
                             className="text-destructive focus:text-destructive"
                           >
                             <Trash2 className="w-4 h-4 mr-2" />
-                            Eliminar
+                            {t('common.delete')}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -282,13 +284,13 @@ export default function ExpensesPage() {
         <DialogContent className="modal-content sm:max-w-lg">
           <DialogHeader>
             <DialogTitle className="font-heading text-xl">
-              {editingExpense ? 'Actualizar Gasto' : 'Nuevo Gasto'}
+              {editingExpense ? t('expenses.formTitleEdit') : t('expenses.formTitleNew')}
             </DialogTitle>
-            <DialogDescription>Configura los parámetros del gasto fijo</DialogDescription>
+            <DialogDescription>{t('expenses.formDesc')}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label>Concepto</Label>
+              <Label>{t('expenses.fieldConcept')}</Label>
               <Input
                 value={form.concept}
                 onChange={(e) => setForm({ ...form, concept: e.target.value })}
@@ -297,7 +299,7 @@ export default function ExpensesPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Importe (€)</Label>
+                <Label>{t('expenses.fieldAmount')}</Label>
                 <Input
                   type="number"
                   min={0.01}
@@ -308,7 +310,7 @@ export default function ExpensesPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Vencimiento</Label>
+                <Label>{t('expenses.fieldDueDate')}</Label>
                 <Input
                   type="date"
                   value={form.dueDate}
@@ -319,7 +321,7 @@ export default function ExpensesPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Categoría</Label>
+                <Label>{t('expenses.fieldCategory')}</Label>
                 <Select value={form.category} onValueChange={(val) => setForm({ ...form, category: val })}>
                   <SelectTrigger className="input-field"><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -328,7 +330,7 @@ export default function ExpensesPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Frecuencia</Label>
+                <Label>{t('expenses.fieldFrequency')}</Label>
                 <Select value={form.frequency} onValueChange={(val) => setForm({ ...form, frequency: val })}>
                   <SelectTrigger className="input-field"><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -339,9 +341,9 @@ export default function ExpensesPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
+            <Button variant="outline" onClick={() => setIsModalOpen(false)}>{t('common.cancel')}</Button>
             <Button className="btn-secondary" onClick={handleSubmit} disabled={isSubmitting}>
-              {isSubmitting ? 'Guardando...' : 'Guardar Cambios'}
+              {isSubmitting ? t('common.saving') : t('common.save')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -350,19 +352,19 @@ export default function ExpensesPage() {
       <Dialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <DialogContent className="modal-content sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>¿Eliminar gasto?</DialogTitle>
+            <DialogTitle>{t('expenses.deleteTitle')}</DialogTitle>
             <DialogDescription>
-              Esta acción no se puede deshacer. Se eliminará "{deleteTarget?.concept}".
+              {t('common.confirmDeleteDesc', { name: deleteTarget?.concept })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteTarget(null)}>Cancelar</Button>
+            <Button variant="outline" onClick={() => setDeleteTarget(null)}>{t('common.cancel')}</Button>
             <Button
               variant="destructive"
               onClick={() => deleteMutation.mutate(deleteTarget._id)}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? 'Eliminando...' : 'Eliminar'}
+              {deleteMutation.isPending ? t('common.deleting') : t('common.delete')}
             </Button>
           </DialogFooter>
         </DialogContent>
