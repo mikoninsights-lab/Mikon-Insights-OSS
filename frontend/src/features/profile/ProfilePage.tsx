@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { User as UserIcon, Mail, Shield, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +10,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/context/AuthContext';
 
 export default function ProfilePage() {
+  const { t } = useTranslation();
   const { user, updateProfile } = useAuth();
   const [username, setUsername] = useState(user?.username || '');
   const [maxHoursCapacity, setMaxHoursCapacity] = useState(user?.maxHoursCapacity || 160);
@@ -16,20 +18,20 @@ export default function ProfilePage() {
 
   const handleSubmit = async () => {
     if (!username.trim()) {
-      toast.error('El nombre de usuario es obligatorio');
+      toast.error(t('profile.usernameRequired'));
       return;
     }
     if (!maxHoursCapacity || maxHoursCapacity <= 0) {
-      toast.error('La capacidad debe ser mayor que 0');
+      toast.error(t('profile.capacityInvalid'));
       return;
     }
 
     setIsSubmitting(true);
     try {
       await updateProfile({ username, maxHoursCapacity });
-      toast.success('Perfil actualizado');
+      toast.success(t('profile.updateSuccess'));
     } catch (err: any) {
-      toast.error(err.message || 'Error al actualizar el perfil');
+      toast.error(err.message || t('profile.updateError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -40,9 +42,9 @@ export default function ProfilePage() {
       <div>
         <h1 className="font-heading text-3xl font-bold flex items-center gap-3">
           <UserIcon className="w-8 h-8 text-primary" />
-          Mi Perfil
+          {t('profile.title')}
         </h1>
-        <p className="text-muted-foreground text-sm">Gestiona tus datos de cuenta y capacidad operativa</p>
+        <p className="text-muted-foreground text-sm">{t('profile.subtitle')}</p>
       </div>
 
       <Card className="tech-card">
@@ -50,13 +52,13 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label className="flex items-center gap-2 text-muted-foreground">
-                <Mail className="w-4 h-4" /> Email
+                <Mail className="w-4 h-4" /> {t('profile.email')}
               </Label>
               <Input value={user?.email || ''} disabled className="input-field opacity-60" />
             </div>
             <div className="space-y-2">
               <Label className="flex items-center gap-2 text-muted-foreground">
-                <Shield className="w-4 h-4" /> Rol
+                <Shield className="w-4 h-4" /> {t('profile.role')}
               </Label>
               <div>
                 <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
@@ -67,7 +69,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="space-y-2">
-            <Label>Nombre de Usuario</Label>
+            <Label>{t('profile.username')}</Label>
             <Input
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -77,7 +79,7 @@ export default function ProfilePage() {
 
           <div className="space-y-2">
             <Label className="flex items-center gap-2">
-              <Clock className="w-4 h-4" /> Capacidad Máxima (horas/mes)
+              <Clock className="w-4 h-4" /> {t('profile.maxCapacity')}
             </Label>
             <Input
               type="number"
@@ -87,13 +89,13 @@ export default function ProfilePage() {
               className="input-field"
             />
             <p className="text-xs text-muted-foreground">
-              Usada para calcular la alerta de capacidad en el dashboard.
+              {t('profile.maxCapacityHelp')}
             </p>
           </div>
 
           <div className="flex justify-end">
             <Button className="btn-primary" onClick={handleSubmit} disabled={isSubmitting}>
-              {isSubmitting ? 'Guardando...' : 'Guardar Cambios'}
+              {isSubmitting ? t('common.saving') : t('common.save')}
             </Button>
           </div>
         </CardContent>

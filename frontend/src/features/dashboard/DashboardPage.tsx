@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { useIndependenceScore } from '@/hooks/useIndependenceScore';
 import { useCapacityAlert } from '@/hooks/useCapacityAlert';
@@ -22,6 +23,7 @@ const formatCurrency = (value: number) =>
   }).format(value || 0);
 
 export default function DashboardPage() {
+  const { t } = useTranslation();
   const {
     totalFixedCosts,
     scalableRevenue,
@@ -39,14 +41,14 @@ export default function DashboardPage() {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="font-heading text-3xl font-bold tracking-tight">Panel de Control</h1>
+          <h1 className="font-heading text-3xl font-bold tracking-tight">{t('dashboard.title')}</h1>
           <p className="text-muted-foreground">
-            Monitor de salud financiera y operativa de Mikon Insights
+            {t('dashboard.subtitle')}
           </p>
         </div>
         <Badge variant="outline" className="w-fit bg-primary/5 text-primary border-primary/20">
           <Activity className="w-3 h-3 mr-1" />
-          Modo Laboratorio Activo
+          {t('dashboard.labMode')}
         </Badge>
       </div>
 
@@ -65,12 +67,12 @@ export default function DashboardPage() {
                   <Zap className="w-5 h-5" />
                 </div>
                 <Badge variant="outline" className="border-emerald-500/20 text-emerald-400 text-[10px]">
-                  EFICIENCIA
+                  {t('dashboard.efficiency')}
                 </Badge>
               </div>
-              <p className="text-sm text-muted-foreground mb-1">Uso de Módulos XAI</p>
+              <p className="text-sm text-muted-foreground mb-1">{t('dashboard.modulesUsage')}</p>
               <h3 className="text-3xl font-heading font-bold">{efficiencyScore}%</h3>
-              <p className="text-xs text-muted-foreground mt-2">Proyectos que aprovechan el Lab</p>
+              <p className="text-xs text-muted-foreground mt-2">{t('dashboard.modulesUsageDesc')}</p>
             </CardContent>
           </Card>
 
@@ -81,12 +83,12 @@ export default function DashboardPage() {
                   <Target className="w-5 h-5" />
                 </div>
                 <Badge variant="outline" className="border-amber-500/20 text-amber-400 text-[10px]">
-                  OPERACIONES
+                  {t('dashboard.operations')}
                 </Badge>
               </div>
-              <p className="text-sm text-muted-foreground mb-1">Proyectos Activos</p>
+              <p className="text-sm text-muted-foreground mb-1">{t('dashboard.activeProjects')}</p>
               <h3 className="text-3xl font-heading font-bold">{activeProjects}</h3>
-              <p className="text-xs text-muted-foreground mt-2">Carga de trabajo actual</p>
+              <p className="text-xs text-muted-foreground mt-2">{t('dashboard.activeProjectsDesc')}</p>
             </CardContent>
           </Card>
         </div>
@@ -94,10 +96,10 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { title: 'Ingresos Totales',  value: formatCurrency(totalRevenue),                                  icon: TrendingUp,  color: 'text-primary'      },
-          { title: 'Gastos Mensuales',  value: formatCurrency(totalFixedCosts),                               icon: CreditCard,  color: 'text-red-400'      },
-          { title: 'Margen Bruto',      value: formatCurrency(totalRevenue - totalFixedCosts),                icon: ArrowUpRight, color: 'text-emerald-400' },
-          { title: 'Alerta Capacidad',  value: `${capacityAlert.percentage}% (${capacityAlert.status})`,     icon: AlertTriangle, color: capacityAlert.color },
+          { title: t('dashboard.totalRevenue'), value: formatCurrency(totalRevenue), icon: TrendingUp, color: 'text-primary' },
+          { title: t('dashboard.monthlyExpenses'), value: formatCurrency(totalFixedCosts), icon: CreditCard, color: 'text-red-400' },
+          { title: t('dashboard.grossMargin'), value: formatCurrency(totalRevenue - totalFixedCosts), icon: ArrowUpRight, color: 'text-emerald-400' },
+          { title: t('dashboard.capacityAlert'), value: `${capacityAlert.percentage}% (${capacityAlert.status})`, icon: AlertTriangle, color: capacityAlert.color },
         ].map((item, i) => (
           <Card key={i} className="tech-card">
             <CardContent className="p-4">
