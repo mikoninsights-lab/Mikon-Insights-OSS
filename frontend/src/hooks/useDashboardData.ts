@@ -30,5 +30,6 @@ export function useDashboardData() {
     capacityUsage: kpis.capacityUsage,
     maxCapacity: kpis.maxCapacity,
     committedHours: kpis.committedHours,
+    revenueByMonth: data?.revenueByMonth || [],
   };
 }

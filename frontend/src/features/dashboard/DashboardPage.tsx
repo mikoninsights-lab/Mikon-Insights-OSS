@@ -14,6 +14,7 @@ import {
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { IndependenceScoreCard } from './IndependenceScoreCard';
+import { RevenueChart } from './RevenueChart';
 
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat('es-ES', {
@@ -32,6 +33,7 @@ export default function DashboardPage() {
     activeProjects,
     committedHours,
     maxCapacity,
+    revenueByMonth,
   } = useDashboardData();
 
   const independenceScore = useIndependenceScore(scalableRevenue, totalFixedCosts);
@@ -112,6 +114,8 @@ export default function DashboardPage() {
           </Card>
         ))}
       </div>
+
+      <RevenueChart data={revenueByMonth} />
     </div>
   );
 }

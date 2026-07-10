@@ -151,7 +151,34 @@ export async function generateGhostwriterContent(payload: GhostwriterPayload): P
 }
 
 // ---- Analytics ----
-export const getDashboardAnalytics = () => request<any>('/api/analytics/dashboard');
+export interface RevenueMonthEntry {
+  _id: { year: number; month: number };
+  revenue: number;
+  scalable: number;
+  consultancy: number;
+}
+
+export interface DashboardAnalytics {
+  kpis: {
+    totalRevenue: number;
+    scalableRevenue: number;
+    consultancyRevenue: number;
+    bonusRevenue: number;
+    monthlyExpenses: number;
+    totalFixedCosts: number;
+    independenceScore: number;
+    capacityUsage: number;
+    maxCapacity: number;
+    committedHours: number;
+    activeProjects: number;
+    efficiencyScore: number;
+  };
+  projectStats: unknown;
+  revenueByMonth: RevenueMonthEntry[];
+  expensesByCategory: unknown;
+}
+
+export const getDashboardAnalytics = () => request<DashboardAnalytics>('/api/analytics/dashboard');
 
 // ---- Audit Log (Admin only) ----
 export interface AuditLogEntry {

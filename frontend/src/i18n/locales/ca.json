@@ -66,7 +66,13 @@
     "totalRevenue": "Ingressos Totals",
     "monthlyExpenses": "Despeses Mensuals",
     "grossMargin": "Marge Brut",
-    "capacityAlert": "Alerta Capacitat"
+    "capacityAlert": "Alerta Capacitat",
+    "revenueChartTitle": "Evolució d'Ingressos",
+    "revenueChartDesc": "Històric dels últims 12 mesos per tipus d'ingrés",
+    "revenueChartEmpty": "Encara no hi ha prou dades de facturació per mostrar l'històric",
+    "chartScalable": "Escalable",
+    "chartConsultancy": "Consultoria",
+    "chartTotal": "Total"
   },
   "profile": {
     "title": "El Meu Perfil",

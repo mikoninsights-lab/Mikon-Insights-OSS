@@ -66,7 +66,13 @@
     "totalRevenue": "Ingresos Totales",
     "monthlyExpenses": "Gastos Mensuales",
     "grossMargin": "Margen Bruto",
-    "capacityAlert": "Alerta Capacidad"
+    "capacityAlert": "Alerta Capacidad",
+    "revenueChartTitle": "Evolución de Ingresos",
+    "revenueChartDesc": "Histórico de los últimos 12 meses por tipo de ingreso",
+    "revenueChartEmpty": "Aún no hay suficientes datos de facturación para mostrar el histórico",
+    "chartScalable": "Escalable",
+    "chartConsultancy": "Consultoría",
+    "chartTotal": "Total"
   },
   "profile": {
     "title": "Mi Perfil",
