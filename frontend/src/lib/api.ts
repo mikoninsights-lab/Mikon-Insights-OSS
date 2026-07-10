@@ -112,6 +112,44 @@ export const updateLead = (id: string, data: any) =>
 export const deleteLead = (id: string) =>
   request(`/api/leads/${id}`, { method: 'DELETE' });
 
+// ---- Ghostwriter ----
+// This endpoint returns { success, content, model, elapsedMs } (no `data` wrapper),
+// unlike the rest of the API, so it can't go through the generic request() helper.
+export interface GhostwriterPayload {
+  contentType: string;
+  service: string;
+  audience: string;
+  model: string;
+  context: string;
+}
+
+export interface GhostwriterResult {
+  content: string;
+  model: string;
+  elapsedMs: number;
+}
+
+export async function generateGhostwriterContent(payload: GhostwriterPayload): Promise<GhostwriterResult> {
+  const token = getToken();
+  const res = await fetch(`${BACKEND_URL}/api/ghostwriter/generate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const json = await res.json().catch(() => ({}));
+
+  if (!res.ok || json.success === false) {
+    if (res.status === 401 || res.status === 403) clearToken();
+    throw new ApiError(json.message || `Request failed (${res.status})`, res.status);
+  }
+
+  return { content: json.content, model: json.model, elapsedMs: json.elapsedMs };
+}
+
 // ---- Analytics ----
 export const getDashboardAnalytics = () => request<any>('/api/analytics/dashboard');
 
