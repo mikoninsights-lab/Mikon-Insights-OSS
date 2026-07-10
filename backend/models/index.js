@@ -4,6 +4,7 @@ import Project from './Project.js';
 import ProjectArchitecture from './ProjectArchitecture.js';
 import FixedCost from './FixedCost.js';
 import AuditLog from './AuditLog.js';
+import Lead from './Lead.js';
 
 export {
   User,
@@ -11,5 +12,6 @@ export {
   Project,
   ProjectArchitecture,
   FixedCost,
-  AuditLog
+  AuditLog,
+  Lead
 };

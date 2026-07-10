@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
-import { User, Service, Project, FixedCost } from '../models/index.js';
+import { User, Service, Project, FixedCost, Lead } from '../models/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -232,6 +232,26 @@ const seedFixedCosts = async (expenses) => {
   return fixedCosts;
 };
 
+// Seed Leads (sample sales pipeline data)
+const seedLeads = async () => {
+  console.log('🧲 Seeding leads...');
+
+  const leads = [
+    { name: 'María García', company: 'DataCorp', value: 1850, stage: 'new', score: 87 },
+    { name: 'Pedro Sánchez', company: 'Medi360', value: 12000, stage: 'contacted', score: 91 },
+    { name: 'Carlos Ruiz', company: 'AnalyticsPro', value: 3200, stage: 'nurturing', score: 62 },
+    { name: 'Ana López', company: 'TechStart', value: 950, stage: 'nurturing', score: 45 },
+    { name: 'Laura Martín', company: 'GrowthLab', value: 7500, stage: 'proposal', score: 78 },
+    { name: 'Diego Fernández', company: 'CloudBI', value: 2800, stage: 'contacted', score: 55 },
+    { name: 'Elena Ruiz', company: 'DataFlow', value: 15000, stage: 'negotiation', score: 82 },
+    { name: 'Javier Torres', company: 'MetricaIA', value: 1850, stage: 'new', score: 70 },
+  ];
+
+  await Lead.deleteMany({});
+  await Lead.insertMany(leads);
+  console.log(`✅ Created ${leads.length} leads`);
+};
+
 // Main seed function
 const seed = async () => {
   try {
@@ -266,22 +286,25 @@ const seed = async () => {
     await seedServices(operations);
     await seedProjects(operations);
     await seedFixedCosts(gastos);
-    
+    await seedLeads();
+
     console.log('\n🎉 Seed completed successfully!\n');
-    
+
     // Print summary
     const counts = {
       users: await User.countDocuments(),
       services: await Service.countDocuments(),
       projects: await Project.countDocuments(),
-      fixedCosts: await FixedCost.countDocuments()
+      fixedCosts: await FixedCost.countDocuments(),
+      leads: await Lead.countDocuments()
     };
-    
+
     console.log('📊 Database Summary:');
     console.log(`   - Users: ${counts.users}`);
     console.log(`   - Services: ${counts.services}`);
     console.log(`   - Projects: ${counts.projects}`);
     console.log(`   - Fixed Costs: ${counts.fixedCosts}`);
+    console.log(`   - Leads: ${counts.leads}`);
     console.log(`   - Total: ${Object.values(counts).reduce((a, b) => a + b, 0)} documents\n`);
     
     process.exit(0);

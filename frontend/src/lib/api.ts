@@ -102,6 +102,16 @@ export const updateService = (id: string, data: any) =>
 export const deleteService = (id: string) =>
   request(`/api/services/${id}`, { method: 'DELETE' });
 
+// ---- Leads (Pipeline) ----
+export const getLeads = (stage?: string) =>
+  request<any[]>(`/api/leads${stage ? `?stage=${stage}` : ''}`);
+export const createLead = (data: any) =>
+  request('/api/leads', { method: 'POST', body: JSON.stringify(data) });
+export const updateLead = (id: string, data: any) =>
+  request(`/api/leads/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+export const deleteLead = (id: string) =>
+  request(`/api/leads/${id}`, { method: 'DELETE' });
+
 // ---- Analytics ----
 export const getDashboardAnalytics = () => request<any>('/api/analytics/dashboard');
 

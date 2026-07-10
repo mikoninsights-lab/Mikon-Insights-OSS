@@ -88,6 +88,19 @@ export const fixedCostSchema = z.object({
 
 export const fixedCostUpdateSchema = fixedCostSchema.partial();
 
+// Lead Schemas
+export const leadSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  company: z.string().optional().default(''),
+  value: z.coerce.number().min(0, 'Value must be positive').optional().default(0),
+  stage: z.enum(['new', 'nurturing', 'contacted', 'proposal', 'negotiation', 'won', 'lost']).optional().default('new'),
+  score: z.coerce.number().min(0).max(100).optional().default(50),
+  interestedService: z.string().optional().nullable(),
+  notes: z.string().optional().default('')
+});
+
+export const leadUpdateSchema = leadSchema.partial();
+
 // Project Architecture Schema
 export const projectArchitectureSchema = z.object({
   projectId: z.string().min(1, 'Project ID is required'),

@@ -13,6 +13,7 @@ import serviceRoutes from './routes/services.js';
 import analyticsRoutes from './routes/analytics.js';
 import ghostwriterRoutes from './routes/ghostwriter.js';
 import auditLogRoutes from './routes/auditLogs.js';
+import leadRoutes from './routes/leads.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -51,6 +52,7 @@ app.use('/api/services', serviceRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/ghostwriter', ghostwriterRoutes);
 app.use('/api/audit-logs', auditLogRoutes);
+app.use('/api/leads', leadRoutes);
 
 // Health check
 app.get('/api', (req, res) => {
