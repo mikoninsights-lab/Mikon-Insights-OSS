@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Clock, MoreHorizontal, Filter, Plus, Target, ChevronRight, Edit, Trash2, ArrowRightLeft } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -27,7 +28,7 @@ import {
 import { getLeads, createLead, updateLead, deleteLead, getServices } from '@/lib/api';
 import { PipelineFilters } from './PipelineFilters';
 import { LeadFormDialog, type LeadForm } from './LeadFormDialog';
-import { BOARD_STAGES, ALL_STAGES, STAGE_LABELS, STAGE_COLORS, TEMP_CLASSES, getTemp, daysInStage } from './constants';
+import { BOARD_STAGES, ALL_STAGES, STAGE_LABEL_KEYS, STAGE_COLORS, TEMP_CLASSES, getTemp, daysInStage } from './constants';
 
 const emptyForm: LeadForm = {
   name: '',
@@ -43,6 +44,7 @@ const formatCurrency = (value: number) =>
   new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(value || 0);
 
 export default function PipelinePage() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [stageFilter, setStageFilter] = useState('');
@@ -59,25 +61,25 @@ export default function PipelinePage() {
 
   const createMutation = useMutation({
     mutationFn: createLead,
-    onSuccess: () => { toast.success('Lead creado'); invalidate(); setIsModalOpen(false); },
+    onSuccess: () => { toast.success(t('pipeline.newLead')); invalidate(); setIsModalOpen(false); },
     onError: (err: any) => toast.error(err.message),
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: any }) => updateLead(id, data),
-    onSuccess: () => { toast.success('Lead actualizado'); invalidate(); setIsModalOpen(false); },
+    onSuccess: () => { toast.success(t('pipeline.formTitleEdit')); invalidate(); setIsModalOpen(false); },
     onError: (err: any) => toast.error(err.message),
   });
 
   const moveMutation = useMutation({
     mutationFn: ({ id, stage }: { id: string; stage: string }) => updateLead(id, { stage }),
-    onSuccess: () => { toast.success('Lead movido de etapa'); invalidate(); },
+    onSuccess: () => { toast.success(t('pipeline.moveToStage')); invalidate(); },
     onError: (err: any) => toast.error(err.message),
   });
 
   const deleteMutation = useMutation({
     mutationFn: deleteLead,
-    onSuccess: () => { toast.success('Lead eliminado'); invalidate(); setDeleteTarget(null); },
+    onSuccess: () => { toast.success(t('common.delete')); invalidate(); setDeleteTarget(null); },
     onError: (err: any) => { toast.error(err.message); setDeleteTarget(null); },
   });
 
@@ -104,7 +106,7 @@ export default function PipelinePage() {
   };
 
   const handleSubmit = () => {
-    if (!form.name.trim()) { toast.error('El nombre es obligatorio'); return; }
+    if (!form.name.trim()) { toast.error(t('common.nameRequired')); return; }
     const payload = { ...form, interestedService: form.interestedService || undefined };
     if (editingLead) {
       updateMutation.mutate({ id: editingLead._id, data: payload });
@@ -119,8 +121,8 @@ export default function PipelinePage() {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-8">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="font-heading text-3xl font-bold tracking-tight">Sales Pipeline</h1>
-          <p className="text-muted-foreground text-sm mt-1">Gestión visual del embudo de conversión y autoridad</p>
+          <h1 className="font-heading text-3xl font-bold tracking-tight">{t('pipeline.title')}</h1>
+          <p className="text-muted-foreground text-sm mt-1">{t('pipeline.subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -130,11 +132,11 @@ export default function PipelinePage() {
             onClick={() => setShowFilters((v) => !v)}
           >
             <Filter className="w-4 h-4 mr-2" />
-            Filtros
+            {t('pipeline.filters')}
           </Button>
           <Button size="sm" className="btn-primary" onClick={openCreate}>
             <Plus className="w-4 h-4 mr-2" />
-            Nuevo Lead
+            {t('pipeline.newLead')}
           </Button>
         </div>
       </div>
@@ -170,7 +172,7 @@ export default function PipelinePage() {
                   <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
                     <div>
                       <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
-                        {STAGE_LABELS[stage]}
+                        {t(STAGE_LABEL_KEYS[stage])}
                       </h3>
                       <p className="text-sm font-mono font-bold text-primary">{formatCurrency(stageTotal)}</p>
                     </div>
@@ -196,7 +198,7 @@ export default function PipelinePage() {
                               <p className="text-sm font-bold group-hover:text-primary transition-colors">{lead.name}</p>
                               <p className="text-[10px] text-muted-foreground flex items-center gap-1">
                                 <Target className="w-3 h-3" />
-                                {lead.company || 'Sin empresa'}
+                                {lead.company || t('pipeline.noCompany')}
                               </p>
                             </div>
                             <DropdownMenu>
@@ -208,17 +210,17 @@ export default function PipelinePage() {
                               <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
                                 <DropdownMenuItem onClick={() => openEdit(lead)}>
                                   <Edit className="w-4 h-4 mr-2" />
-                                  Editar
+                                  {t('common.edit')}
                                 </DropdownMenuItem>
                                 <DropdownMenuSub>
                                   <DropdownMenuSubTrigger>
                                     <ArrowRightLeft className="w-4 h-4 mr-2" />
-                                    Mover a etapa
+                                    {t('pipeline.moveToStage')}
                                   </DropdownMenuSubTrigger>
                                   <DropdownMenuSubContent>
                                     {ALL_STAGES.filter((s) => s !== lead.stage).map((s) => (
                                       <DropdownMenuItem key={s} onClick={() => moveMutation.mutate({ id: lead._id, stage: s })}>
-                                        {STAGE_LABELS[s]}
+                                        {t(STAGE_LABEL_KEYS[s])}
                                       </DropdownMenuItem>
                                     ))}
                                   </DropdownMenuSubContent>
@@ -229,7 +231,7 @@ export default function PipelinePage() {
                                   className="text-destructive focus:text-destructive"
                                 >
                                   <Trash2 className="w-4 h-4 mr-2" />
-                                  Eliminar
+                                  {t('common.delete')}
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
@@ -253,7 +255,7 @@ export default function PipelinePage() {
                           {days > 7 && (
                             <div className="mt-3 flex items-center gap-1.5 text-[9px] text-red-400 font-bold uppercase tracking-wider">
                               <Clock className="h-3 w-3" />
-                              {days} días estancado
+                              {days} {t('pipeline.daysStuck')}
                             </div>
                           )}
                         </motion.div>
@@ -262,7 +264,7 @@ export default function PipelinePage() {
                     {stageLeads.length === 0 && (
                       <div className="h-32 border-2 border-dashed border-border/20 rounded-2xl flex flex-col items-center justify-center gap-2 text-muted-foreground/30">
                         <ChevronRight className="w-6 h-6 rotate-90" />
-                        <span className="text-[10px] font-bold uppercase">Sin actividad</span>
+                        <span className="text-[10px] font-bold uppercase">{t('pipeline.noActivity')}</span>
                       </div>
                     )}
                   </div>
@@ -287,19 +289,19 @@ export default function PipelinePage() {
       <Dialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <DialogContent className="modal-content sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>¿Eliminar lead?</DialogTitle>
+            <DialogTitle>{t('pipeline.deleteTitle')}</DialogTitle>
             <DialogDescription>
-              Esta acción no se puede deshacer. Se eliminará "{deleteTarget?.name}".
+              {t('common.confirmDeleteDesc', { name: deleteTarget?.name })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteTarget(null)}>Cancelar</Button>
+            <Button variant="outline" onClick={() => setDeleteTarget(null)}>{t('common.cancel')}</Button>
             <Button
               variant="destructive"
               onClick={() => deleteMutation.mutate(deleteTarget._id)}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? 'Eliminando...' : 'Eliminar'}
+              {deleteMutation.isPending ? t('common.deleting') : t('common.delete')}
             </Button>
           </DialogFooter>
         </DialogContent>

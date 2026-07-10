@@ -1,14 +1,14 @@
 export type Stage = 'new' | 'nurturing' | 'contacted' | 'proposal' | 'negotiation' | 'won' | 'lost';
 export type Temp = 'hot' | 'warm' | 'cold';
 
-export const STAGE_LABELS: Record<Stage, string> = {
-  new: 'Nuevo Lead',
-  nurturing: 'Nutriendo',
-  contacted: 'Contactado',
-  proposal: 'Propuesta',
-  negotiation: 'Negociación',
-  won: 'Ganado',
-  lost: 'Perdido',
+export const STAGE_LABEL_KEYS: Record<Stage, string> = {
+  new: 'pipeline.stageNew',
+  nurturing: 'pipeline.stageNurturing',
+  contacted: 'pipeline.stageContacted',
+  proposal: 'pipeline.stageProposal',
+  negotiation: 'pipeline.stageNegotiation',
+  won: 'pipeline.stageWon',
+  lost: 'pipeline.stageLost',
 };
 
 export const STAGE_COLORS: Record<Stage, string> = {
