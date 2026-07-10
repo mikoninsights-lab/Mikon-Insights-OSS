@@ -1,8 +1,9 @@
 import { useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSaaSSimulator } from '@/hooks/useSaaSSimulator';
-import { 
-  TrendingUp, 
-  Users, 
+import {
+  TrendingUp,
+  Users,
   DollarSign,
   Calendar,
   Info,
@@ -125,15 +126,16 @@ function MetricCard({ title, value, icon: Icon, color = 'primary' }: { title: st
 }
 
 export default function SaaSSimulatorPage() {
+  const { t } = useTranslation();
   const simulator = useSaaSSimulator();
 
   useEffect(() => {
     simulator.calculate();
   }, [
-    simulator.monthlyPrice, 
-    simulator.initialCustomers, 
-    simulator.newCustomersPerMonth, 
-    simulator.churnRate, 
+    simulator.monthlyPrice,
+    simulator.initialCustomers,
+    simulator.newCustomersPerMonth,
+    simulator.churnRate,
     simulator.horizonMonths
   ]);
 
@@ -152,29 +154,29 @@ export default function SaaSSimulatorPage() {
         <div className="space-y-1">
           <div className="flex items-center gap-2 mb-2">
             <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 py-1">
-              Mikon Lab
+              {t('saas.badge')}
             </Badge>
           </div>
           <h1 className="font-heading text-3xl md:text-4xl font-bold tracking-tight">
-            Calculadora de ingresos <span className="text-primary">SaaS</span>
+            {t('saas.title')} <span className="text-primary">{t('saas.titleHighlight')}</span>
           </h1>
           <p className="text-muted-foreground max-w-2xl">
-            Proyecta el crecimiento de tu recurrencia mensual (MRR) y anual (ARR) bajo diferentes escenarios de mercado.
+            {t('saas.subtitle')}
           </p>
         </div>
-        
+
         <div className="flex p-1 bg-muted/30 rounded-xl border border-border/40 w-fit">
-          <button 
+          <button
             onClick={() => simulator.setHorizon(12)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${simulator.horizonMonths === 12 ? 'bg-background text-foreground shadow-sm border border-border/50' : 'text-muted-foreground hover:text-foreground'}`}
           >
-            12 meses
+            {t('saas.months12')}
           </button>
-          <button 
+          <button
             onClick={() => simulator.setHorizon(24)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${simulator.horizonMonths === 24 ? 'bg-background text-foreground shadow-sm border border-border/50' : 'text-muted-foreground hover:text-foreground'}`}
           >
-            24 meses
+            {t('saas.months24')}
           </button>
         </div>
       </div>
@@ -186,15 +188,15 @@ export default function SaaSSimulatorPage() {
             <CardHeader className="pb-4">
               <CardTitle className="text-xl font-heading flex items-center gap-2">
                 <Target className="w-5 h-5 text-primary" />
-                Parámetros
+                {t('saas.parameters')}
               </CardTitle>
               <CardDescription>
-                Ajusta las palancas de crecimiento de tu negocio
+                {t('saas.parametersDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-8">
               <SimulatorSlider
-                label="Precio mensual"
+                label={t('saas.monthlyPrice')}
                 value={simulator.monthlyPrice}
                 onChange={simulator.setPrice}
                 min={5}
@@ -202,11 +204,11 @@ export default function SaaSSimulatorPage() {
                 step={1}
                 unit="€"
                 icon={DollarSign}
-                description="Ticket medio de suscripción mensual por cliente"
+                description={t('saas.monthlyPriceDesc')}
               />
 
               <SimulatorSlider
-                label="Clientes iniciales"
+                label={t('saas.initialCustomers')}
                 value={simulator.initialCustomers}
                 onChange={simulator.setInitialCustomers}
                 min={0}
@@ -214,11 +216,11 @@ export default function SaaSSimulatorPage() {
                 step={1}
                 unit="CLI"
                 icon={Users}
-                description="Número de clientes con los que arranca la simulación"
+                description={t('saas.initialCustomersDesc')}
               />
 
               <SimulatorSlider
-                label="Nuevos clientes/mes"
+                label={t('saas.newCustomers')}
                 value={simulator.newCustomersPerMonth}
                 onChange={simulator.setNewCustomers}
                 min={0}
@@ -226,11 +228,11 @@ export default function SaaSSimulatorPage() {
                 step={1}
                 unit="CLI"
                 icon={ArrowUpRight}
-                description="Previsión de captación mensual de nuevos usuarios"
+                description={t('saas.newCustomersDesc')}
               />
 
               <SimulatorSlider
-                label="Churn mensual"
+                label={t('saas.churn')}
                 value={simulator.churnRate}
                 onChange={simulator.setChurn}
                 min={0}
@@ -238,7 +240,7 @@ export default function SaaSSimulatorPage() {
                 step={0.5}
                 unit="%"
                 icon={Percent}
-                description="Porcentaje de bajas mensuales. El churn es el 'enemigo silencioso' del SaaS."
+                description={t('saas.churnDesc')}
               />
             </CardContent>
           </Card>
@@ -247,20 +249,20 @@ export default function SaaSSimulatorPage() {
           <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/5 border border-primary/20 space-y-4">
             <h3 className="font-heading font-bold text-lg flex items-center gap-2">
               <Info className="w-5 h-5 text-primary" />
-              ¿Qué estamos midiendo?
+              {t('saas.whatWeMeasure')}
             </h3>
             <div className="space-y-3">
               <div>
-                <p className="text-sm font-bold text-foreground">MRR (Monthly Recurring Revenue)</p>
-                <p className="text-xs text-muted-foreground">Ingreso recurrente mensual. Es la métrica vital.</p>
+                <p className="text-sm font-bold text-foreground">{t('saas.mrrTitle')}</p>
+                <p className="text-xs text-muted-foreground">{t('saas.mrrDesc')}</p>
               </div>
               <div>
-                <p className="text-sm font-bold text-foreground">ARR (Annual Recurring Revenue)</p>
-                <p className="text-xs text-muted-foreground">MRR x 12. Indica el tamaño anual del negocio.</p>
+                <p className="text-sm font-bold text-foreground">{t('saas.arrTitle')}</p>
+                <p className="text-xs text-muted-foreground">{t('saas.arrDesc')}</p>
               </div>
               <div>
-                <p className="text-sm font-bold text-foreground">Churn Rate</p>
-                <p className="text-xs text-muted-foreground">Porcentaje de clientes que abandonan cada mes.</p>
+                <p className="text-sm font-bold text-foreground">{t('saas.churnTitle')}</p>
+                <p className="text-xs text-muted-foreground">{t('saas.churnRateDesc')}</p>
               </div>
             </div>
           </div>
@@ -269,27 +271,27 @@ export default function SaaSSimulatorPage() {
         {/* Right Column: Visualization & Metrics */}
         <div className="lg:col-span-8 space-y-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <MetricCard 
-              title="MRR Final" 
-              value={formatCurrency(simulator.finalMRR)} 
+            <MetricCard
+              title={t('saas.mrrFinal')}
+              value={formatCurrency(simulator.finalMRR)}
               icon={BarChart3}
               color="primary"
             />
-            <MetricCard 
-              title="ARR Estimado" 
-              value={formatCurrency(simulator.finalARR)} 
+            <MetricCard
+              title={t('saas.arrEstimated')}
+              value={formatCurrency(simulator.finalARR)}
               icon={Calendar}
               color="emerald"
             />
-            <MetricCard 
-              title="Clientes" 
-              value={simulator.finalCustomers.toString()} 
+            <MetricCard
+              title={t('saas.customers')}
+              value={simulator.finalCustomers.toString()}
               icon={Users}
               color="blue"
             />
-            <MetricCard 
-              title="Ingresos Acum." 
-              value={formatCurrency(simulator.cumulativeRevenue)} 
+            <MetricCard
+              title={t('saas.cumulativeRevenue')}
+              value={formatCurrency(simulator.cumulativeRevenue)}
               icon={TrendingUp}
               color="amber"
             />
@@ -299,8 +301,8 @@ export default function SaaSSimulatorPage() {
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-heading">Proyección de MRR (€)</CardTitle>
-                  <CardDescription>Escenarios: Optimista (+30%), Base y Pesimista (-30%)</CardDescription>
+                  <CardTitle className="text-lg font-heading">{t('saas.mrrProjection')}</CardTitle>
+                  <CardDescription>{t('saas.scenarios')}</CardDescription>
                 </div>
                 <Badge variant="secondary" className="font-mono text-[10px]">M0 - M{simulator.horizonMonths}</Badge>
               </div>
@@ -319,22 +321,22 @@ export default function SaaSSimulatorPage() {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                  <XAxis 
-                    dataKey="name" 
-                    axisLine={false} 
-                    tickLine={false} 
+                  <XAxis
+                    dataKey="name"
+                    axisLine={false}
+                    tickLine={false}
                     tick={{fill: 'rgba(255,255,255,0.4)', fontSize: 10}}
                     interval={window.innerWidth < 768 ? 4 : 2}
                   />
-                  <YAxis 
-                    axisLine={false} 
-                    tickLine={false} 
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
                     tick={{fill: 'rgba(255,255,255,0.4)', fontSize: 10}}
                     tickFormatter={(value) => `${value}€`}
                   />
-                  <RechartsTooltip 
-                    contentStyle={{ 
-                      backgroundColor: 'rgba(10, 10, 10, 0.9)', 
+                  <RechartsTooltip
+                    contentStyle={{
+                      backgroundColor: 'rgba(10, 10, 10, 0.9)',
                       borderColor: 'rgba(255, 255, 255, 0.1)',
                       borderRadius: '12px',
                       backdropFilter: 'blur(8px)',
@@ -343,33 +345,33 @@ export default function SaaSSimulatorPage() {
                     }}
                     itemStyle={{ padding: '2px 0' }}
                   />
-                  <Legend 
-                    verticalAlign="top" 
-                    height={36} 
+                  <Legend
+                    verticalAlign="top"
+                    height={36}
                     iconType="circle"
                     formatter={(value) => <span className="text-[10px] font-bold uppercase tracking-widest ml-1">{value}</span>}
                   />
-                  <Area 
-                    type="monotone" 
-                    dataKey="Optimista" 
-                    stroke="#10b981" 
+                  <Area
+                    type="monotone"
+                    dataKey="Optimista"
+                    stroke="#10b981"
                     strokeWidth={2}
-                    fillOpacity={1} 
-                    fill="url(#colorOpt)" 
+                    fillOpacity={1}
+                    fill="url(#colorOpt)"
                     strokeDasharray="5 5"
                   />
-                  <Area 
-                    type="monotone" 
-                    dataKey="Base" 
-                    stroke="var(--primary)" 
+                  <Area
+                    type="monotone"
+                    dataKey="Base"
+                    stroke="var(--primary)"
                     strokeWidth={3}
-                    fillOpacity={1} 
-                    fill="url(#colorBase)" 
+                    fillOpacity={1}
+                    fill="url(#colorBase)"
                   />
-                  <Area 
-                    type="monotone" 
-                    dataKey="Pesimista" 
-                    stroke="#f59e0b" 
+                  <Area
+                    type="monotone"
+                    dataKey="Pesimista"
+                    stroke="#f59e0b"
                     strokeWidth={2}
                     fill="transparent"
                     strokeDasharray="3 3"
@@ -383,19 +385,23 @@ export default function SaaSSimulatorPage() {
             <div className="p-5 rounded-2xl bg-muted/20 border border-border/50">
               <h4 className="font-heading font-bold mb-2 flex items-center gap-2">
                 <ChevronRight className="w-4 h-4 text-primary" />
-                Impacto del Churn
+                {t('saas.churnImpact')}
               </h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Reducir tu churn del {simulator.churnRate}% al {Math.max(0, simulator.churnRate - 1)}% puede parecer poco, pero en {simulator.horizonMonths} meses tiene un impacto exponencial en el ARR. Un SaaS saludable aspira a un churn inferior al 3% mensual.
+                {t('saas.churnImpactDesc', {
+                  from: simulator.churnRate,
+                  to: Math.max(0, simulator.churnRate - 1),
+                  months: simulator.horizonMonths,
+                })}
               </p>
             </div>
             <div className="p-5 rounded-2xl bg-muted/20 border border-border/50">
               <h4 className="font-heading font-bold mb-2 flex items-center gap-2">
                 <ChevronRight className="w-4 h-4 text-primary" />
-                Escalabilidad Mikon Insights
+                {t('saas.scalability')}
               </h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Utiliza los módulos de automatización de Mikon Insights para mantener tu estructura de costes plana mientras el número de clientes crece, maximizando tu margen neto por cliente.
+                {t('saas.scalabilityDesc')}
               </p>
             </div>
           </div>

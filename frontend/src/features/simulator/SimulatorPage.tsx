@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useROISimulator } from '@/hooks/useROISimulator';
-import { 
-  Calculator, 
-  TrendingUp, 
-  Clock, 
+import {
+  Calculator,
+  TrendingUp,
+  Clock,
   DollarSign,
   Package,
   Gauge,
@@ -118,6 +119,7 @@ function ResultCard({ title, value, subtitle, icon: Icon, variant = 'default' }:
 }
 
 export default function SimulatorPage() {
+  const { t } = useTranslation();
   const simulator = useROISimulator({
     estimatedHours: 20,
     hourlyRate: 75,
@@ -130,10 +132,10 @@ export default function SimulatorPage() {
   }, [simulator.estimatedHours, simulator.hourlyRate, simulator.modulesUsed, simulator.complexityModifier]);
 
   const getROIStatus = () => {
-    if (simulator.roi >= 100) return { color: 'text-emerald-400', label: 'Excelente', variant: 'success' as const };
-    if (simulator.roi >= 50) return { color: 'text-primary', label: 'Bueno', variant: 'primary' as const };
-    if (simulator.roi >= 0) return { color: 'text-amber-400', label: 'Ajustado', variant: 'warning' as const };
-    return { color: 'text-red-400', label: 'Negativo', variant: 'default' as const };
+    if (simulator.roi >= 100) return { color: 'text-emerald-400', label: t('simulator.statusExcellent'), variant: 'success' as const };
+    if (simulator.roi >= 50) return { color: 'text-primary', label: t('simulator.statusGood'), variant: 'primary' as const };
+    if (simulator.roi >= 0) return { color: 'text-amber-400', label: t('simulator.statusAdjusted'), variant: 'warning' as const };
+    return { color: 'text-red-400', label: t('simulator.statusNegative'), variant: 'default' as const };
   };
 
   const roiStatus = getROIStatus();
@@ -143,10 +145,10 @@ export default function SimulatorPage() {
       <div>
         <h1 className="font-heading text-2xl md:text-3xl font-bold flex items-center gap-3">
           <Calculator className="w-8 h-8 text-primary" />
-          Simulador ROI
+          {t('simulator.title')}
         </h1>
         <p className="text-muted-foreground">
-          Calcula el margen de beneficio proyectado antes de crear un contrato
+          {t('simulator.subtitle')}
         </p>
       </div>
 
@@ -156,15 +158,15 @@ export default function SimulatorPage() {
             <CardHeader>
               <CardTitle className="text-lg font-heading flex items-center gap-2">
                 <Gauge className="w-5 h-5 text-primary" />
-                Parámetros del Proyecto
+                {t('simulator.parameters')}
               </CardTitle>
               <CardDescription>
-                Ajusta los valores para simular diferentes escenarios
+                {t('simulator.parametersDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-8">
               <SimulatorSlider
-                label="Horas Estimadas"
+                label={t('simulator.hoursLabel')}
                 value={simulator.estimatedHours}
                 onChange={simulator.setHours}
                 min={1}
@@ -172,11 +174,11 @@ export default function SimulatorPage() {
                 step={1}
                 unit="h"
                 icon={Clock}
-                description="Horas totales estimadas para el proyecto"
+                description={t('simulator.hoursDesc')}
               />
 
               <SimulatorSlider
-                label="Tarifa por Hora"
+                label={t('simulator.rateLabel')}
                 value={simulator.hourlyRate}
                 onChange={simulator.setRate}
                 min={25}
@@ -184,11 +186,11 @@ export default function SimulatorPage() {
                 step={5}
                 unit="€"
                 icon={DollarSign}
-                description="Tu tarifa por hora de consultoría"
+                description={t('simulator.rateDesc')}
               />
 
               <SimulatorSlider
-                label="Módulos XAI Aplicados"
+                label={t('simulator.modulesLabel')}
                 value={simulator.modulesUsed}
                 onChange={simulator.setModules}
                 min={0}
@@ -196,11 +198,11 @@ export default function SimulatorPage() {
                 step={1}
                 unit=""
                 icon={Package}
-                description="Número de módulos reutilizables (PersonaCraft, CultureCraft, Brújula Predictiva). Cada módulo reduce el tiempo efectivo un 20%"
+                description={t('simulator.modulesDesc')}
               />
 
               <SimulatorSlider
-                label="Modificador de Complejidad"
+                label={t('simulator.complexityLabel')}
                 value={simulator.complexityModifier}
                 onChange={simulator.setComplexity}
                 min={0.5}
@@ -208,29 +210,29 @@ export default function SimulatorPage() {
                 step={0.1}
                 unit="x"
                 icon={Target}
-                description="1.0 = normal. >1 = más complejo (cobra más). <1 = más simple"
+                description={t('simulator.complexityDesc')}
               />
             </CardContent>
           </Card>
 
           <Card className="tech-card">
             <CardHeader>
-              <CardTitle className="text-lg font-heading">Desglose Visual</CardTitle>
+              <CardTitle className="text-lg font-heading">{t('simulator.visualBreakdown')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Horas Originales → Efectivas</span>
+                  <span className="text-muted-foreground">{t('simulator.originalToEffective')}</span>
                   <span className="font-mono">
                     {simulator.estimatedHours}h → {simulator.effectiveHours}h
                   </span>
                 </div>
                 <div className="flex h-4 rounded-lg overflow-hidden bg-muted/30">
-                  <div 
+                  <div
                     className="bg-primary/60 transition-all duration-300"
                     style={{ width: `${(simulator.effectiveHours / simulator.estimatedHours) * 100}%` }}
                   />
-                  <div 
+                  <div
                     className="bg-emerald-500/60 transition-all duration-300"
                     style={{ width: `${((simulator.estimatedHours - simulator.effectiveHours) / simulator.estimatedHours) * 100}%` }}
                   />
@@ -239,11 +241,11 @@ export default function SimulatorPage() {
 
               <div className="grid grid-cols-2 gap-4 pt-4">
                 <div className="p-4 rounded-lg bg-muted/30">
-                  <p className="stat-label mb-1">Ingresos Base</p>
+                  <p className="stat-label mb-1">{t('simulator.baseRevenue')}</p>
                   <p className="font-mono text-lg">{formatCurrency(simulator.baseRevenue)}</p>
                 </div>
                 <div className="p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
-                  <p className="stat-label mb-1">Ahorro Módulos</p>
+                  <p className="stat-label mb-1">{t('simulator.moduleSavings')}</p>
                   <p className="font-mono text-lg text-emerald-400">{formatCurrency(simulator.moduleSavings)}</p>
                 </div>
               </div>
@@ -256,18 +258,18 @@ export default function SimulatorPage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-lg font-heading flex items-center gap-2">
                 <Zap className="w-5 h-5 text-primary" />
-                Resultados
+                {t('simulator.results')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary/10 to-secondary/5 border border-primary/30">
-                <p className="stat-label mb-2">ROI Proyectado</p>
+                <p className="stat-label mb-2">{t('simulator.projectedROI')}</p>
                 <p className={`text-5xl font-heading font-bold ${roiStatus.color}`}>
                   {simulator.roi}%
                 </p>
                 <Badge variant="outline" className={`mt-3 ${
-                  roiStatus.variant === 'success' ? 'badge-success' : 
-                  roiStatus.variant === 'warning' ? 'badge-warning' : 
+                  roiStatus.variant === 'success' ? 'badge-success' :
+                  roiStatus.variant === 'warning' ? 'badge-warning' :
                   'badge-info'
                 }`}>
                   {roiStatus.label}
@@ -276,7 +278,7 @@ export default function SimulatorPage() {
 
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Score de Eficiencia</span>
+                  <span className="text-muted-foreground">{t('simulator.efficiencyScore')}</span>
                   <span className="font-mono font-medium">{simulator.efficiencyScore}/100</span>
                 </div>
                 <Progress value={simulator.efficiencyScore} className="h-2" />
@@ -285,25 +287,25 @@ export default function SimulatorPage() {
           </Card>
 
           <ResultCard
-            title="Margen Proyectado"
+            title={t('simulator.projectedMargin')}
             value={formatCurrency(simulator.projectedMargin)}
-            subtitle="Beneficio neto estimado"
+            subtitle={t('simulator.netProfit')}
             icon={TrendingUp}
             variant={simulator.projectedMargin > 0 ? 'success' : 'warning'}
           />
 
           <ResultCard
-            title="Horas Efectivas"
+            title={t('simulator.effectiveHours')}
             value={`${simulator.effectiveHours}h`}
-            subtitle={`De ${simulator.estimatedHours}h originales`}
+            subtitle={t('simulator.fromOriginal', { hours: simulator.estimatedHours })}
             icon={Clock}
             variant="primary"
           />
 
           <ResultCard
-            title="Ahorro por Módulos"
+            title={t('simulator.moduleSavingsTitle')}
             value={formatCurrency(simulator.moduleSavings)}
-            subtitle={`${simulator.modulesUsed} módulo(s) aplicado(s)`}
+            subtitle={t('simulator.modulesApplied', { count: simulator.modulesUsed })}
             icon={Package}
             variant="secondary"
           />
