@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { Upload, Mic, FileText, Sparkles, History, Send, BrainCircuit, Type, MessageSquareCode, Copy, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,19 +16,6 @@ import {
 } from "@/components/ui/select";
 import { getServices, generateGhostwriterContent, type GhostwriterResult } from "@/lib/api";
 
-const CONTENT_TYPES = [
-  { value: "linkedin", label: "Post de LinkedIn" },
-  { value: "email", label: "Email Comercial" },
-  { value: "article", label: "Artículo de Blog" },
-  { value: "proposal", label: "Propuesta Comercial" },
-  { value: "twitter", label: "Thread de Twitter/X" },
-];
-
-const MODELS = [
-  { value: "flash", label: "Flash (rápido)" },
-  { value: "pro", label: "Pro (calidad)" },
-];
-
 const topicAngles = ["Marketing Analytics", "People Analytics", "IA Aplicada", "Estrategia de Datos", "Caso de Éxito", "Liderazgo Técnico"];
 const audiences = ["CMO / Director Marketing", "HR Director", "Founder / CEO", "Data Team Lead", "Inversores"];
 
@@ -37,6 +25,7 @@ interface HistoryEntry extends GhostwriterResult {
 }
 
 export default function GhostwriterPage() {
+  const { t } = useTranslation();
   const [inputType, setInputType] = useState<"audio" | "text">("text");
   const [contentType, setContentType] = useState("linkedin");
   const [model, setModel] = useState("flash");
@@ -48,16 +37,29 @@ export default function GhostwriterPage() {
   const [result, setResult] = useState<HistoryEntry | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
 
+  const CONTENT_TYPES = [
+    { value: "linkedin", label: t('ghostwriter.contentTypeLinkedin') },
+    { value: "email", label: t('ghostwriter.contentTypeEmail') },
+    { value: "article", label: t('ghostwriter.contentTypeArticle') },
+    { value: "proposal", label: t('ghostwriter.contentTypeProposal') },
+    { value: "twitter", label: t('ghostwriter.contentTypeTwitter') },
+  ];
+
+  const MODELS = [
+    { value: "flash", label: t('ghostwriter.modelFlash') },
+    { value: "pro", label: t('ghostwriter.modelPro') },
+  ];
+
   const { data: services = [] } = useQuery({ queryKey: ['services'], queryFn: getServices });
 
   const handleGenerate = async () => {
     if (inputType === "audio") {
-      toast.error("La transcripción de audio estará disponible próximamente. Usa el modo Texto por ahora.");
+      toast.error(t('ghostwriter.audioModeError'));
       return;
     }
-    if (!selectedService) { toast.error("Selecciona un servicio a promocionar"); return; }
-    if (!selectedAudience) { toast.error("Selecciona una audiencia objetivo"); return; }
-    if (!context.trim()) { toast.error("Escribe el briefing o contexto del encargo"); return; }
+    if (!selectedService) { toast.error(t('ghostwriter.selectServiceError')); return; }
+    if (!selectedAudience) { toast.error(t('ghostwriter.selectAudienceError')); return; }
+    if (!context.trim()) { toast.error(t('ghostwriter.contextRequiredError')); return; }
 
     setIsGenerating(true);
     try {
@@ -76,9 +78,9 @@ export default function GhostwriterPage() {
       };
       setResult(entry);
       setHistory((prev) => [entry, ...prev]);
-      toast.success("Contenido generado");
+      toast.success(t('ghostwriter.generateSuccess'));
     } catch (err: any) {
-      toast.error(err.message || "Error generando contenido");
+      toast.error(err.message || t('ghostwriter.contextRequiredError'));
     } finally {
       setIsGenerating(false);
     }
@@ -87,7 +89,7 @@ export default function GhostwriterPage() {
   const handleCopy = () => {
     if (!result) return;
     navigator.clipboard.writeText(result.content);
-    toast.success("Copiado al portapapeles");
+    toast.success(t('ghostwriter.copiedToClipboard'));
   };
 
   return (
@@ -97,11 +99,11 @@ export default function GhostwriterPage() {
           <div className="flex items-center gap-2 mb-2">
             <Badge className="bg-primary/10 text-primary border-primary/20 flex gap-1 items-center">
               <Sparkles className="w-3 h-3" />
-              Powered by Gemini
+              {t('ghostwriter.poweredBy')}
             </Badge>
           </div>
-          <h1 className="font-heading text-3xl font-bold tracking-tight">Ghostwriter IA</h1>
-          <p className="text-muted-foreground">Transforma ideas brutas en contenido de autoridad estratégica</p>
+          <h1 className="font-heading text-3xl font-bold tracking-tight">{t('ghostwriter.title')}</h1>
+          <p className="text-muted-foreground">{t('ghostwriter.subtitle')}</p>
         </div>
       </div>
 
@@ -117,7 +119,7 @@ export default function GhostwriterPage() {
                     inputType === "audio" ? "bg-background text-foreground shadow-sm border border-border/50" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  <Mic className="h-4 w-4" /> Audio
+                  <Mic className="h-4 w-4" /> {t('ghostwriter.audio')}
                 </button>
                 <button
                   onClick={() => setInputType("text")}
@@ -125,12 +127,12 @@ export default function GhostwriterPage() {
                     inputType === "text" ? "bg-background text-foreground shadow-sm border border-border/50" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  <Type className="h-4 w-4" /> Texto
+                  <Type className="h-4 w-4" /> {t('ghostwriter.text')}
                 </button>
               </div>
               <CardTitle className="text-xl font-heading flex items-center gap-2">
                 {inputType === "audio" ? <BrainCircuit className="w-5 h-5 text-primary" /> : <MessageSquareCode className="w-5 h-5 text-primary" />}
-                Entrada de ideas
+                {t('ghostwriter.ideaInput')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -144,8 +146,8 @@ export default function GhostwriterPage() {
                     className="border-2 border-dashed border-primary/20 rounded-2xl p-12 text-center hover:border-primary/50 transition-all cursor-pointer group bg-primary/5"
                   >
                     <Upload className="h-10 w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform" />
-                    <p className="text-base font-medium text-foreground">Arrastra tu nota de voz</p>
-                    <p className="text-sm text-muted-foreground mt-1">Próximamente — usa el modo Texto para generar contenido ahora</p>
+                    <p className="text-base font-medium text-foreground">{t('ghostwriter.dragAudio')}</p>
+                    <p className="text-sm text-muted-foreground mt-1">{t('ghostwriter.audioComingSoon')}</p>
                   </motion.div>
                 ) : (
                   <motion.div
@@ -158,7 +160,7 @@ export default function GhostwriterPage() {
                       value={context}
                       onChange={(e) => setContext(e.target.value)}
                       className="w-full h-40 bg-muted/30 border border-border/50 rounded-2xl p-5 text-base text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-                      placeholder="Pega tus notas brutas, un esquema o simplemente escribe lo que tienes en mente..."
+                      placeholder={t('ghostwriter.textPlaceholder')}
                     />
                   </motion.div>
                 )}
@@ -166,7 +168,7 @@ export default function GhostwriterPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <p className="text-[10px] uppercase font-bold text-muted-foreground ml-1">Tipo de Contenido</p>
+                  <p className="text-[10px] uppercase font-bold text-muted-foreground ml-1">{t('ghostwriter.contentType')}</p>
                   <Select value={contentType} onValueChange={setContentType}>
                     <SelectTrigger className="input-field"><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -175,7 +177,7 @@ export default function GhostwriterPage() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <p className="text-[10px] uppercase font-bold text-muted-foreground ml-1">Modelo</p>
+                  <p className="text-[10px] uppercase font-bold text-muted-foreground ml-1">{t('ghostwriter.model')}</p>
                   <Select value={model} onValueChange={setModel}>
                     <SelectTrigger className="input-field"><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -187,18 +189,18 @@ export default function GhostwriterPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <p className="text-[10px] uppercase font-bold text-muted-foreground ml-1">Servicio a Promocionar</p>
+                  <p className="text-[10px] uppercase font-bold text-muted-foreground ml-1">{t('ghostwriter.serviceToPromote')}</p>
                   <Select value={selectedService} onValueChange={setSelectedService}>
-                    <SelectTrigger className="input-field"><SelectValue placeholder="Seleccionar servicio..." /></SelectTrigger>
+                    <SelectTrigger className="input-field"><SelectValue placeholder={t('ghostwriter.selectService')} /></SelectTrigger>
                     <SelectContent>
                       {(services as any[]).map((s) => <SelectItem key={s._id} value={s.name}>{s.name}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <p className="text-[10px] uppercase font-bold text-muted-foreground ml-1">Audiencia Objetivo</p>
+                  <p className="text-[10px] uppercase font-bold text-muted-foreground ml-1">{t('ghostwriter.targetAudience')}</p>
                   <Select value={selectedAudience} onValueChange={setSelectedAudience}>
-                    <SelectTrigger className="input-field"><SelectValue placeholder="Seleccionar perfil..." /></SelectTrigger>
+                    <SelectTrigger className="input-field"><SelectValue placeholder={t('ghostwriter.selectAudience')} /></SelectTrigger>
                     <SelectContent>
                       {audiences.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}
                     </SelectContent>
@@ -207,12 +209,12 @@ export default function GhostwriterPage() {
               </div>
 
               <div className="space-y-2">
-                <p className="text-[10px] uppercase font-bold text-muted-foreground ml-1">Ángulo Estratégico (opcional)</p>
+                <p className="text-[10px] uppercase font-bold text-muted-foreground ml-1">{t('ghostwriter.strategicAngle')}</p>
                 <Select value={selectedTopic || "none"} onValueChange={(val) => setSelectedTopic(val === "none" ? "" : val)}>
-                  <SelectTrigger className="input-field"><SelectValue placeholder="Sin ángulo específico" /></SelectTrigger>
+                  <SelectTrigger className="input-field"><SelectValue placeholder={t('ghostwriter.noAngle')} /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">Sin ángulo específico</SelectItem>
-                    {topicAngles.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                    <SelectItem value="none">{t('ghostwriter.noAngle')}</SelectItem>
+                    {topicAngles.map((angle) => <SelectItem key={angle} value={angle}>{angle}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
@@ -228,12 +230,12 @@ export default function GhostwriterPage() {
                   <div className="relative flex items-center justify-center gap-2">
                     {isGenerating ? (
                       <>
-                        Generando...
+                        {t('ghostwriter.generating')}
                         <Loader2 className="w-4 h-4 animate-spin" />
                       </>
                     ) : (
                       <>
-                        Generar Contenido de Autoridad
+                        {t('ghostwriter.generate')}
                         <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </>
                     )}
@@ -241,8 +243,8 @@ export default function GhostwriterPage() {
                 </Button>
                 <p className="text-[10px] text-center text-muted-foreground mt-4 italic">
                   {inputType === "audio"
-                    ? "El modo Audio estará disponible próximamente — usa Texto para generar ahora."
-                    : "Este proceso consumirá créditos de Gemini para generar un borrador estructurado."}
+                    ? t('ghostwriter.audioComingSoonNote')
+                    : t('ghostwriter.creditsNote')}
                 </p>
               </div>
             </CardContent>
@@ -258,7 +260,7 @@ export default function GhostwriterPage() {
                   </Badge>
                   <Button variant="ghost" size="sm" onClick={handleCopy}>
                     <Copy className="w-3.5 h-3.5 mr-1.5" />
-                    Copiar
+                    {t('ghostwriter.copy')}
                   </Button>
                 </div>
               </CardHeader>
@@ -266,7 +268,9 @@ export default function GhostwriterPage() {
                 <div className="whitespace-pre-wrap text-sm text-foreground bg-muted/20 rounded-xl p-5 max-h-96 overflow-y-auto">
                   {result.content}
                 </div>
-                <p className="text-[10px] text-muted-foreground mt-3 text-right">Generado en {(result.elapsedMs / 1000).toFixed(1)}s</p>
+                <p className="text-[10px] text-muted-foreground mt-3 text-right">
+                  {t('ghostwriter.generatedIn', { seconds: (result.elapsedMs / 1000).toFixed(1) })}
+                </p>
               </CardContent>
             </Card>
           )}
@@ -278,13 +282,13 @@ export default function GhostwriterPage() {
             <CardHeader className="pb-2">
               <CardTitle className="text-base font-heading flex items-center gap-2">
                 <History className="w-4 h-4 text-primary" />
-                Historial de esta sesión
+                {t('ghostwriter.sessionHistory')}
               </CardTitle>
             </CardHeader>
             <CardContent className="p-2">
               {history.length === 0 ? (
                 <p className="text-xs text-muted-foreground text-center py-6">
-                  Aún no has generado contenido. Tu historial aparecerá aquí.
+                  {t('ghostwriter.noHistory')}
                 </p>
               ) : (
                 <div className="space-y-1">
@@ -304,7 +308,7 @@ export default function GhostwriterPage() {
                         </div>
                       </div>
                       <Badge variant="outline" className="text-[9px] border-emerald-500/20 text-emerald-400 bg-emerald-500/5 shrink-0">
-                        LISTO
+                        {t('ghostwriter.ready')}
                       </Badge>
                     </button>
                   ))}
@@ -314,9 +318,9 @@ export default function GhostwriterPage() {
           </Card>
 
           <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-transparent border border-primary/20">
-            <h3 className="font-heading font-bold text-sm mb-3">Sugerencia del día</h3>
+            <h3 className="font-heading font-bold text-sm mb-3">{t('ghostwriter.tipTitle')}</h3>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Elige un ángulo estratégico y describe brevemente el contexto del cliente: cuanto más específico el briefing, más útil será el borrador que genere Gemini.
+              {t('ghostwriter.tipBody')}
             </p>
           </div>
         </div>

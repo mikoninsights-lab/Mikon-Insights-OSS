@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { format, type Locale } from 'date-fns';
+import { es, enUS, ca } from 'date-fns/locale';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { ScrollText, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -22,18 +23,23 @@ const ACTION_BADGE: Record<string, string> = {
   delete: 'bg-red-500/20 text-red-400 border-red-500/30',
 };
 
-const ACTION_LABEL: Record<string, string> = {
-  create: 'Creación',
-  update: 'Edición',
-  delete: 'Borrado',
-};
+const DATE_LOCALES: Record<string, Locale> = { es, en: enUS, ca };
 
 export default function AuditLogPage() {
+  const { t, i18n } = useTranslation();
   const [logs, setLogs] = useState<AuditLogEntry[]>([]);
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+
+  const ACTION_LABEL: Record<string, string> = {
+    create: t('auditLog.actionCreate'),
+    update: t('auditLog.actionUpdate'),
+    delete: t('auditLog.actionDelete'),
+  };
+
+  const dateLocale = DATE_LOCALES[i18n.language] || es;
 
   const loadLogs = useCallback(async (targetPage: number) => {
     setLoading(true);
@@ -59,10 +65,10 @@ export default function AuditLogPage() {
       <div>
         <h1 className="font-heading text-3xl font-bold flex items-center gap-3">
           <ScrollText className="w-8 h-8 text-primary" />
-          Audit Log
+          {t('auditLog.title')}
         </h1>
         <p className="text-muted-foreground text-sm">
-          Trazabilidad de cambios en Proyectos y Gastos — quién, qué y cuándo. Solo visible para Admin.
+          {t('auditLog.subtitle')}
         </p>
       </div>
 
@@ -71,31 +77,31 @@ export default function AuditLogPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Fecha</TableHead>
-                <TableHead>Usuario</TableHead>
-                <TableHead>Acción</TableHead>
-                <TableHead>Entidad</TableHead>
-                <TableHead>Detalle</TableHead>
+                <TableHead>{t('auditLog.colDate')}</TableHead>
+                <TableHead>{t('auditLog.colUser')}</TableHead>
+                <TableHead>{t('auditLog.colAction')}</TableHead>
+                <TableHead>{t('auditLog.colEntity')}</TableHead>
+                <TableHead>{t('auditLog.colDetail')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                    Cargando...
+                    {t('auditLog.loading')}
                   </TableCell>
                 </TableRow>
               ) : logs.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                    Sin movimientos registrados todavía
+                    {t('auditLog.noRecords')}
                   </TableCell>
                 </TableRow>
               ) : (
                 logs.map((log) => (
                   <TableRow key={log._id}>
                     <TableCell className="whitespace-nowrap text-sm">
-                      {format(new Date(log.createdAt), "d MMM yyyy, HH:mm", { locale: es })}
+                      {format(new Date(log.createdAt), "d MMM yyyy, HH:mm", { locale: dateLocale })}
                     </TableCell>
                     <TableCell className="text-sm">{log.userEmail}</TableCell>
                     <TableCell>
@@ -110,7 +116,7 @@ export default function AuditLogPage() {
           </Table>
 
           <div className="flex items-center justify-between px-4 py-3 border-t border-border/40">
-            <p className="text-xs text-muted-foreground">{total} registros</p>
+            <p className="text-xs text-muted-foreground">{t('auditLog.recordsCount', { count: total })}</p>
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
