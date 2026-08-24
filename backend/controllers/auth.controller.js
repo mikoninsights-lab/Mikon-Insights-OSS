@@ -4,7 +4,7 @@ import { generateToken } from '../middleware/auth.js';
 
 export const register = async (req, res) => {
   try {
-    const { username, email, password, role } = req.body;
+    const { username, email, password } = req.body;
 
     const existingUser = await User.findOne({
       $or: [{ email }, { username }]
@@ -24,7 +24,7 @@ export const register = async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      role: role || 'Manager'
+      role: 'Manager'
     });
 
     await user.save();

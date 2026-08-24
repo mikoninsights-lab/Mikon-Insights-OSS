@@ -4,8 +4,7 @@ import { z } from 'zod';
 export const userRegisterSchema = z.object({
   username: z.string().min(3, 'Username must be at least 3 characters'),
   email: z.string().email('Invalid email format'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-  role: z.enum(['Admin', 'Manager']).optional().default('Manager')
+  password: z.string().min(6, 'Password must be at least 6 characters')
 });
 
 export const userLoginSchema = z.object({
