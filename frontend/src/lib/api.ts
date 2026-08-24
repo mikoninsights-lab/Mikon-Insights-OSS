@@ -69,13 +69,30 @@ export const updateProfile = (data: { username?: string; maxHoursCapacity?: numb
   request<BackendUser>('/api/auth/profile', { method: 'PUT', body: JSON.stringify(data) });
 
 // ---- Projects ----
-export interface PaginatedResponse {
-  pagination: { page: number; limit: number; total: number; pages: number };
-  [key: string]: any;
+export interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  pages: number;
 }
 
-export const getProjects = () =>
-  request<{ projects: any[]; pagination: any }>('/api/projects?limit=100');
+export interface GetProjectsParams {
+  page?: number;
+  limit?: number;
+  category?: string;
+  status?: string;
+  search?: string;
+}
+
+export const getProjects = (params: GetProjectsParams = {}) => {
+  const query = new URLSearchParams();
+  query.set('limit', String(params.limit ?? 20));
+  if (params.page) query.set('page', String(params.page));
+  if (params.category) query.set('category', params.category);
+  if (params.status) query.set('status', params.status);
+  if (params.search) query.set('search', params.search);
+  return request<{ projects: any[]; pagination: Pagination }>(`/api/projects?${query.toString()}`);
+};
 export const createProject = (data: any) =>
   request('/api/projects', { method: 'POST', body: JSON.stringify(data) });
 export const updateProject = (id: string, data: any) =>
@@ -84,8 +101,19 @@ export const deleteProject = (id: string) =>
   request(`/api/projects/${id}`, { method: 'DELETE' });
 
 // ---- Expenses (FixedCost) ----
-export const getExpenses = () =>
-  request<{ expenses: any[]; pagination: any }>('/api/expenses?limit=100');
+export interface GetExpensesParams {
+  page?: number;
+  limit?: number;
+  category?: string;
+}
+
+export const getExpenses = (params: GetExpensesParams = {}) => {
+  const query = new URLSearchParams();
+  query.set('limit', String(params.limit ?? 20));
+  if (params.page) query.set('page', String(params.page));
+  if (params.category) query.set('category', params.category);
+  return request<{ expenses: any[]; pagination: Pagination }>(`/api/expenses?${query.toString()}`);
+};
 export const createExpense = (data: any) =>
   request('/api/expenses', { method: 'POST', body: JSON.stringify(data) });
 export const updateExpense = (id: string, data: any) =>

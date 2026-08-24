@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
@@ -10,6 +10,8 @@ import {
   Edit,
   Trash2,
   CreditCard,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -83,17 +85,23 @@ export default function ExpensesPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [categoryFilter, setCategoryFilter] = useState('');
+  const [page, setPage] = useState(1);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingExpense, setEditingExpense] = useState<any>(null);
   const [form, setForm] = useState(emptyForm);
   const [deleteTarget, setDeleteTarget] = useState<any>(null);
 
+  useEffect(() => {
+    setPage(1);
+  }, [categoryFilter]);
+
   const { data, isLoading } = useQuery({
-    queryKey: ['expenses'],
-    queryFn: getExpenses,
+    queryKey: ['expenses', page, categoryFilter],
+    queryFn: () => getExpenses({ page, category: categoryFilter }),
   });
   const expenses = data?.expenses || [];
+  const pagination = data?.pagination;
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['expenses'] });
 
@@ -115,8 +123,7 @@ export default function ExpensesPage() {
     onError: (err: any) => { toast.error(err.message); setDeleteTarget(null); },
   });
 
-  const filteredExpenses = expenses.filter((e: any) => !categoryFilter || e.category === categoryFilter);
-  const totalAmount = filteredExpenses.reduce((sum: number, exp: any) => sum + (exp.amount || 0), 0);
+  const totalAmount = expenses.reduce((sum: number, exp: any) => sum + (exp.amount || 0), 0);
 
   const openCreate = () => { setEditingExpense(null); setForm(emptyForm); setIsModalOpen(true); };
   const openEdit = (expense: any) => {
@@ -167,7 +174,7 @@ export default function ExpensesPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="tech-card border-secondary/20 bg-secondary/5 p-6 md:col-span-1">
-          <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">{t('expenses.totalFiltered')}</p>
+          <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">{t('expenses.totalShown')}</p>
           <p className="text-4xl font-heading font-bold text-secondary">{formatCurrency(totalAmount)}</p>
           <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
             <div className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
@@ -215,14 +222,14 @@ export default function ExpensesPage() {
                     <TableCell colSpan={7}><Skeleton className="h-8 w-full" /></TableCell>
                   </TableRow>
                 ))
-              ) : filteredExpenses.length === 0 ? (
+              ) : expenses.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
                     {t('expenses.noExpenses')}
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredExpenses.map((expense: any) => {
+                expenses.map((expense: any) => {
                   const isExecuted = expense.dueDate && new Date(expense.dueDate) <= new Date();
                   return (
                   <TableRow key={expense._id} className="table-row">
@@ -278,6 +285,35 @@ export default function ExpensesPage() {
             </TableBody>
           </Table>
         </div>
+
+        {pagination && pagination.total > 0 && (
+          <div className="flex items-center justify-between px-4 py-3 border-t border-border/40">
+            <p className="text-xs text-muted-foreground">
+              {t('expenses.recordsCount', { count: pagination.total })}
+            </p>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page <= 1 || isLoading}
+                onClick={() => setPage((p) => p - 1)}
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              <span className="text-xs text-muted-foreground">
+                {page} / {pagination.pages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page >= pagination.pages || isLoading}
+                onClick={() => setPage((p) => p + 1)}
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        )}
       </Card>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>

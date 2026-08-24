@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
-import { Plus, Briefcase, Edit, Trash2, MoreVertical } from 'lucide-react';
+import { Plus, Briefcase, Edit, Trash2, MoreVertical, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEfficiencyScore } from '@/hooks/useEfficiencyScore';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -54,15 +54,35 @@ export default function ProjectsPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [page, setPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<any>(null);
   const [form, setForm] = useState<ProjectForm>(emptyForm);
   const [deleteTarget, setDeleteTarget] = useState<any>(null);
 
-  const { data, isLoading } = useQuery({ queryKey: ['projects'], queryFn: getProjects });
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, categoryFilter, statusFilter]);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['projects', page, categoryFilter, statusFilter, debouncedSearch],
+    queryFn: () => getProjects({
+      page,
+      category: categoryFilter,
+      status: statusFilter,
+      search: debouncedSearch,
+    }),
+  });
   const projects = data?.projects || [];
+  const pagination = data?.pagination;
 
   const avgBudget  = projects.length > 0 ? projects.reduce((acc: number, p: any) => acc + (p.totalBudget || 0), 0) / projects.length : 0;
   const avgModules = projects.length > 0 ? projects.reduce((acc: number, p: any) => acc + (p.linkedServiceIds?.length || 0), 0) / projects.length : 0;
@@ -89,13 +109,6 @@ export default function ProjectsPage() {
     onError: (err: any) => { toast.error(err.message); setDeleteTarget(null); },
   });
 
-  const filteredProjects = projects.filter((p: any) => {
-    const matchesSearch = p.name?.toLowerCase().includes(search.toLowerCase()) ||
-      p.client?.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = !categoryFilter || p.category === categoryFilter;
-    const matchesStatus   = !statusFilter   || p.status   === statusFilter;
-    return matchesSearch && matchesCategory && matchesStatus;
-  });
 
   const openCreate = () => { setEditingProject(null); setForm(emptyForm); setIsModalOpen(true); };
   const openEdit = (project: any) => {
@@ -175,14 +188,14 @@ export default function ProjectsPage() {
                     <TableCell colSpan={5}><Skeleton className="h-8 w-full" /></TableCell>
                   </TableRow>
                 ))
-              ) : filteredProjects.length === 0 ? (
+              ) : projects.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                     {t('projects.noProjects')}
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredProjects.map((project: any) => (
+                projects.map((project: any) => (
                   <TableRow key={project._id} className="table-row">
                     <TableCell>
                       <p className="font-bold text-foreground">{project.name}</p>
@@ -227,6 +240,35 @@ export default function ProjectsPage() {
             </TableBody>
           </Table>
         </div>
+
+        {pagination && pagination.total > 0 && (
+          <div className="flex items-center justify-between px-4 py-3 border-t border-border/40">
+            <p className="text-xs text-muted-foreground">
+              {t('projects.recordsCount', { count: pagination.total })}
+            </p>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page <= 1 || isLoading}
+                onClick={() => setPage((p) => p - 1)}
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              <span className="text-xs text-muted-foreground">
+                {page} / {pagination.pages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page >= pagination.pages || isLoading}
+                onClick={() => setPage((p) => p + 1)}
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        )}
       </Card>
 
       <ProjectFormDialog
