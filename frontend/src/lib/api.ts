@@ -28,7 +28,9 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const json = await res.json().catch(() => ({}));
 
   if (!res.ok || json.success === false) {
-    if (res.status === 401 || res.status === 403) clearToken();
+    // 401 = invalid/expired token -> log out. 403 = valid token, insufficient
+    // role -> keep the session, just surface the permission error.
+    if (res.status === 401) clearToken();
     throw new ApiError(json.message || `Request failed (${res.status})`, res.status);
   }
 
@@ -171,7 +173,7 @@ export async function generateGhostwriterContent(payload: GhostwriterPayload): P
   const json = await res.json().catch(() => ({}));
 
   if (!res.ok || json.success === false) {
-    if (res.status === 401 || res.status === 403) clearToken();
+    if (res.status === 401) clearToken();
     throw new ApiError(json.message || `Request failed (${res.status})`, res.status);
   }
 
