@@ -2,7 +2,7 @@
 
 <div align="center">
   <img src="https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=node.js" />
-  <img src="https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react" />
+  <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react" />
   <img src="https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb" />
   <img src="https://img.shields.io/badge/Tailwind-CSS-06B6D4?style=for-the-badge&logo=tailwindcss" />
 </div>
@@ -76,7 +76,7 @@ Independence Score = (Ingresos Escalables) / (Gastos Fijos Mensuales) × 100
 ### Backend (Node.js)
 ```
 /backend
-├── models/          # Mongoose schemas (User, Service, Project, FixedCost, AuditLog)
+├── models/          # Mongoose schemas (User, Service, Project, ProjectArchitecture, FixedCost, Lead, AuditLog)
 ├── controllers/     # Lógica de negocio (una función por endpoint)
 ├── routes/          # Express routers: middleware + validación Zod, delegan al controller
 ├── middleware/      # JWT auth middleware
@@ -91,11 +91,15 @@ Separación MVC estricta: las rutas no contienen lógica de negocio, solo compon
 /frontend/src
 ├── features/        # Folder-by-Feature architecture
 │   ├── auth/        # Login, registro
-│   ├── dashboard/   # KPIs, gráficos
-│   ├── projects/    # CRUD proyectos
-│   ├── expenses/    # CRUD gastos
+│   ├── dashboard/   # KPIs, Independence Score, gráfico de evolución
+│   ├── projects/    # CRUD proyectos (paginado)
+│   ├── expenses/    # CRUD gastos (paginado)
 │   ├── services/    # Catálogo módulos
-│   └── simulator/   # ROI Simulator
+│   ├── pipeline/    # Sales pipeline (leads)
+│   ├── simulator/   # ROI Simulator y calculadora SaaS
+│   ├── ghostwriter/ # Generación de contenido con IA (Gemini)
+│   ├── audit/       # Audit Log (solo Admin)
+│   └── profile/     # Perfil de usuario
 ├── hooks/           # Hooks avanzados
 ├── context/         # AuthContext
 └── lib/             # API client
@@ -125,8 +129,8 @@ Separación MVC estricta: las rutas no contienen lógica de negocio, solo compon
 - **24 Servicios** únicos extraídos
 - **2 Usuarios** de prueba (Admin, Manager)
 
-### AuditLog (4ª colección relacionada)
-Cada create/update/delete sobre `Project` o `Expense` queda registrado: quién (`User`), qué acción, sobre qué entidad y cuándo. Visible solo para rol `Admin` en `/audit-log`.
+### AuditLog (colección relacionada)
+Cada create/update/delete sobre `Project`, `Expense`, `Service` o `Lead` queda registrado: quién (`User`), qué acción, sobre qué entidad y cuándo. Visible solo para rol `Admin` en `/audit-log`.
 
 **Detalle de diseño**: el log se escribe de forma *fire-and-forget* (`utils/auditLogger.js`) — la respuesta al usuario no espera a que el log termine de guardarse.
 
@@ -146,18 +150,18 @@ Implementado con `useReducer`. Simulador dinámico con sliders para proyectar m�
 
 ## 🌐 Internacionalización (i18n)
 
-`react-i18next` con 3 idiomas (ES / EN / CA), selector en el header, persistencia en `localStorage`. Cobertura actual: navegación, header y pantalla de login/registro (resto de páginas pendiente de extender con la misma estructura).
+`react-i18next` con 3 idiomas (ES / EN / CA), selector en el header, persistencia en `localStorage`. Cobertura completa: navegación, header, login/registro y todas las páginas de la aplicación.
 
 ## ✅ Estado de integración
 
-Frontend y backend están conectados de extremo a extremo. No hay Supabase ni datos mock en el proyecto: `lib/api.ts` es el único cliente de datos, usado por Auth, Dashboard, Projects, Expenses, Services y Audit Log. El token JWT se gestiona en un único sitio (`AuthContext`) y se reutiliza en toda la app.
+Frontend y backend están conectados de extremo a extremo. No hay Supabase ni datos mock en el proyecto: `lib/api.ts` es el único cliente de datos, usado por Auth, Dashboard, Projects, Expenses, Services, Pipeline (leads), Ghostwriter y Audit Log. El token JWT se gestiona en un único sitio (`AuthContext`) y se reutiliza en toda la app.
 
 ## 🛡️ Seguridad
 
 - **JWT** para autenticación stateless
 - **bcrypt** para hash de contraseñas (salt rounds: 10)
 - **Zod** para validación de schemas en todas las rutas
-- **Roles** (Admin, Manager) para control de acceso
+- **Roles** (Admin, Manager) para control de acceso; el registro público siempre crea usuarios `Manager`
 
 ## 🚀 Despliegue
 
@@ -173,7 +177,7 @@ PORT=8001
 
 **Frontend (.env):**
 ```env
-REACT_APP_BACKEND_URL=https://tu-backend.com
+VITE_BACKEND_URL=https://tu-backend.com
 ```
 
 ### Comandos
@@ -187,9 +191,9 @@ npm start       # Iniciar servidor
 
 # Frontend
 cd frontend
-yarn install
-yarn dev        # Desarrollo
-yarn build      # Producción
+npm install
+npm run dev     # Desarrollo
+npm run build   # Producción
 ```
 
 ### Plataformas Recomendadas
@@ -205,7 +209,7 @@ yarn build      # Producción
 | ODM | Mongoose | Modelado MongoDB |
 | Validación | Zod | Schemas y validación |
 | Auth | JWT + bcrypt | Seguridad |
-| Frontend | React 18 | UI Library |
+| Frontend | React 19 | UI Library |
 | Routing | react-router-dom | SPA Navigation |
 | Formularios | react-hook-form | Form management |
 | Estilos | Tailwind CSS | Utility-first CSS |
@@ -223,7 +227,6 @@ yarn build      # Producción
 
 ## 🔭 Mejoras futuras
 
-- **Índices MongoDB** dedicados en `Project` (`status`, `category`) para acelerar filtrados según crezca el volumen.
 - **Caché de servidor** (Redis) si el número de usuarios concurrentes lo justifica — con el volumen actual no aporta beneficio real; React Query ya cubre la caché de cliente.
 - **Load testing** (k6/Artillery) antes de un eventual salto a tráfico concurrente real.
 

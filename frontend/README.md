@@ -24,13 +24,14 @@ Cliente React del panel de control interno de Mikon Insights. Ver el [README gen
 ├── features/            # Una carpeta por dominio de negocio, no por tipo de archivo
 │   ├── auth/             # Login / registro
 │   ├── dashboard/         # KPIs, Independence Score, gráfico de evolución
-│   ├── projects/          # CRUD de proyectos (filtros y formulario extraídos como subcomponentes)
-│   ├── expenses/          # CRUD de gastos fijos
+│   ├── projects/          # CRUD de proyectos paginado (filtros y formulario extraídos como subcomponentes)
+│   ├── expenses/          # CRUD de gastos fijos paginado
 │   ├── services/          # Catálogo de servicios/módulos
 │   ├── pipeline/           # Sales pipeline (leads)
 │   ├── simulator/          # Simulador de ROI y calculadora SaaS
 │   ├── ghostwriter/         # Generación de contenido con IA
 │   ├── audit/               # Historial de auditoría (solo Admin)
+│   ├── profile/             # Perfil de usuario
 │   └── Layout.tsx            # Shell: sidebar + header, usado por todas las rutas protegidas
 ├── hooks/                # Hooks de dominio reutilizables entre features (ver abajo)
 ├── context/               # AuthContext (JWT, usuario actual, rol)

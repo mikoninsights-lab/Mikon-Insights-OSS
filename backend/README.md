@@ -18,7 +18,7 @@ API REST en Node.js/Express que da servicio al panel de control interno de Mikon
 
 ```
 /backend
-├── models/          # Esquemas Mongoose: User, Service, Project, ProjectArchitecture, FixedCost, AuditLog
+├── models/          # Esquemas Mongoose: User, Service, Project, ProjectArchitecture, FixedCost, Lead, AuditLog
 ├── controllers/      # Lógica de negocio, una función nombrada y exportada por endpoint
 ├── routes/           # Express routers: solo declaran middleware + qué controller atiende cada ruta
 ├── middleware/        # auth.js — authenticateToken, requireRole, generateToken
@@ -39,10 +39,10 @@ Todas las rutas (salvo `/auth/register` y `/auth/login`) requieren `Authorizatio
 
 | Método | Ruta | Rol requerido | Descripción |
 |---|---|---|---|
-| POST | `/api/auth/register` | público | Crear usuario |
+| POST | `/api/auth/register` | público | Crear usuario (el rol siempre es `Manager`; cualquier `role` enviado se ignora) |
 | POST | `/api/auth/login` | público | Login, devuelve JWT |
 | GET | `/api/auth/me` | autenticado | Usuario actual |
-| PUT | `/api/auth/profile` | autenticado | Actualizar `maxHoursCapacity` propio |
+| PUT | `/api/auth/profile` | autenticado | Actualizar `username` y/o `maxHoursCapacity` propios |
 | GET | `/api/projects` | autenticado | Listado paginado, filtros `category/status/search` |
 | GET | `/api/projects/:id` | autenticado | Detalle |
 | POST | `/api/projects` | autenticado | Crear (audit log) |
@@ -59,6 +59,11 @@ Todas las rutas (salvo `/auth/register` y `/auth/login`) requieren `Authorizatio
 | POST | `/api/services` | **Admin** | Crear |
 | PUT | `/api/services/:id` | **Admin** | Actualizar |
 | DELETE | `/api/services/:id` | **Admin** | Eliminar |
+| GET | `/api/leads` | autenticado | Listado de leads del pipeline |
+| GET | `/api/leads/:id` | autenticado | Detalle |
+| POST | `/api/leads` | autenticado | Crear (audit log) |
+| PUT | `/api/leads/:id` | autenticado | Actualizar, incluye cambio de etapa (audit log) |
+| DELETE | `/api/leads/:id` | **Admin** | Eliminar (audit log) |
 | GET | `/api/analytics/dashboard` | autenticado | KPIs, independence score, gráficos |
 | POST | `/api/analytics/roi-simulator` | autenticado | Cálculo de ROI puntual (stateless) |
 | POST | `/api/ghostwriter/generate` | autenticado | Generación de contenido vía Gemini |
@@ -67,7 +72,7 @@ Todas las rutas (salvo `/auth/register` y `/auth/login`) requieren `Authorizatio
 
 ## Colecciones y relaciones
 
-`User` — `Project` — `FixedCost` — `Service` — `ProjectArchitecture` (relación N:M entre Project y Service) — `AuditLog` (referencia genérica a `entityType` + `entityId`, y a `User` como autor). Ver diagrama completo en el [README general](../README.md#-colecciones-mongodb-relacionadas).
+`User` — `Project` — `FixedCost` — `Service` — `Lead` (referencia opcional a `Service`) — `ProjectArchitecture` (relación N:M entre Project y Service) — `AuditLog` (referencia genérica a `entityType` + `entityId`, y a `User` como autor). Ver diagrama completo en el [README general](../README.md#-colecciones-mongodb-relacionadas).
 
 ## Variables de entorno
 
@@ -84,7 +89,7 @@ GEMINI_API_KEY=            # opcional, solo para Ghostwriter IA
 
 ## Seed de datos
 
-`seed/seed.js` lee `Operaciones.csv` y `Gastos.csv` con `fs.readFileSync` nativo (sin librerías de parsing externas para el CSV en sí — un parser propio maneja campos entrecomillados, formato de moneda español (punto de millares, coma decimal) y fechas `DD/MM/YYYY`). Genera 2 usuarios, ~24 servicios, ~338 proyectos y ~178 gastos fijos.
+`seed/seed.js` lee `Operaciones.csv` y `Gastos.csv` con `fs.readFileSync` nativo (sin librerías de parsing externas para el CSV en sí — un parser propio maneja campos entrecomillados, formato de moneda español (punto de millares, coma decimal) y fechas `DD/MM/YYYY`). Genera 2 usuarios, ~24 servicios, 339 proyectos, 179 gastos fijos y 8 leads de ejemplo.
 
 ```bash
 npm install
